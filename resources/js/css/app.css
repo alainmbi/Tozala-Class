@@ -1,0 +1,81 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900&family=Inter:wght@400;500;600;700;800&display=swap');
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: 'Inter', sans-serif;
+  --font-display: 'Cinzel', serif;
+  --color-forest: #354842;
+  --color-forest-deep: #24352f;
+  --color-forest-soft: #556860;
+  --color-gold: #ae8044;
+  --color-ivory: #f7f3ee;
+  --color-ink: #111111;
+  --color-mist: #ebe4da;
+  --shadow-soft: 0 25px 80px rgba(17, 17, 17, 0.12);
+}
+
+@layer base {
+  * {
+    @apply box-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-ivory font-sans text-ink antialiased;
+    background-image:
+      radial-gradient(circle at top left, rgba(174, 128, 68, 0.12), transparent 30%),
+      linear-gradient(180deg, rgba(53, 72, 66, 0.03), rgba(53, 72, 66, 0));
+  }
+
+  a {
+    @apply transition-colors duration-300;
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    @apply font-sans;
+  }
+
+  ::selection {
+    background: rgba(174, 128, 68, 0.25);
+  }
+}
+
+@layer components {
+  .shell {
+    @apply mx-auto w-full max-w-[1440px] px-4 sm:px-6 lg:px-8;
+  }
+
+  .section-space {
+    @apply py-16 sm:py-20 lg:py-24;
+  }
+
+  .card-surface {
+    @apply rounded-[2rem] border border-black/5 bg-white shadow-[var(--shadow-soft)];
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-full bg-forest px-6 py-3 text-sm font-semibold tracking-[0.22em] text-white uppercase transition duration-300 hover:-translate-y-0.5 hover:bg-forest-deep;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center rounded-full border border-forest/15 bg-white px-6 py-3 text-sm font-semibold tracking-[0.22em] text-forest uppercase transition duration-300 hover:-translate-y-0.5 hover:border-gold/40 hover:text-gold;
+  }
+
+  .eyebrow {
+    @apply text-xs font-semibold tracking-[0.35em] text-gold uppercase;
+  }
+
+  .field {
+    @apply h-12 w-full rounded-2xl border border-black/10 bg-white px-4 text-sm text-ink outline-none transition duration-300 placeholder:text-black/35 focus:border-gold/60 focus:ring-2 focus:ring-gold/20;
+  }
+
+  .textarea-field {
+    @apply h-28 w-full resize-none rounded-2xl border border-black/10 bg-white px-4 py-3 text-sm text-ink outline-none transition duration-300 placeholder:text-black/35 focus:border-gold/60 focus:ring-2 focus:ring-gold/20;
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "extends": "@adonisjs/tsconfig/tsconfig.client.json",
+  "compilerOptions": {
+    "ignoreDeprecations": "6.0",
+    "baseUrl": ".",
+    "module": "ESNext",
+    "jsx": "react-jsx",
+    "paths": {
+      "@generated/registry": ["./types/generated-registry.d.ts"],
+      "~/*": ["./*"],
+      "@generated/*": ["../../.adonisjs/client/*"]
+    }
+  },
+  "include": ["./**/*.ts", "./**/*.tsx"]
+}

@@ -1,0 +1,22 @@
+{
+  "extends": "@adonisjs/tsconfig/tsconfig.app.json",
+  "compilerOptions": {
+    "rootDir": "./",
+    "jsx": "react-jsx",
+    "outDir": "./build",
+    "ignoreDeprecations": "6.0",
+    "baseUrl": ".",
+    "paths": {
+      "~/*": ["./resources/js/*"],
+      "@generated/*": ["./.adonisjs/client/*"]
+    }
+  },
+  "exclude": [
+    "./resources/js/**",
+    "./inertia/**",
+    "./node_modules/**",
+    "./build/**",
+    "./bower_components/**",
+    "./jspm_packages/**"
+  ]
+}

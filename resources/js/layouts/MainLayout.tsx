@@ -1,14 +1,15 @@
-import { BrandMark } from '../components/BrandMark.js'
 import { Form, Link } from '@adonisjs/inertia/react'
-import { toast, Toaster } from 'sonner'
 import { usePage } from '@inertiajs/react'
 import { useEffect, useState, type ReactNode } from 'react'
+import { toast, Toaster } from 'sonner'
+import { BrandLogo } from '../components/common/BrandLogo.js'
+import { BrandSilhouette } from '../components/common/BrandSilhouette.js'
 import type { SharedProps } from '../lib/shared.js'
 
 const navigation = [
   { label: 'Accueil', href: '/' },
   { label: 'Shop', href: '/shop' },
-  { label: 'Événementiel', href: '/event' },
+  { label: 'Evenementiel', href: '/event' },
   { label: 'Services', href: '/services' },
   { label: 'Caisse', href: '/checkout' },
 ]
@@ -19,7 +20,7 @@ const footerColumns = [
     links: [
       { label: 'Accueil', href: '/' },
       { label: 'Univers', href: '/#univers' },
-      { label: 'Pièces maîtresses', href: '/#pieces' },
+      { label: 'Pieces maitresses', href: '/#pieces' },
     ],
   },
   {
@@ -31,11 +32,11 @@ const footerColumns = [
     ],
   },
   {
-    title: 'Expérience',
+    title: 'Experience',
     links: [
-      { label: 'Événementiel', href: '/event' },
+      { label: 'Evenementiel', href: '/event' },
       { label: 'Boutique', href: '/shop' },
-      { label: 'Passer à la caisse', href: '/checkout' },
+      { label: 'Passer a la caisse', href: '/checkout' },
     ],
   },
 ]
@@ -106,14 +107,14 @@ export default function MainLayout({ children }: { children: ReactNode }) {
 
   return (
     <div className="min-h-screen">
-      <header className="sticky top-0 z-40 border-b border-black/6 bg-ivory/90 backdrop-blur">
+      <header className="sticky top-0 z-40 border-b border-black/6 bg-ivory/92 backdrop-blur">
         <div className="shell">
-          <div className="flex h-20 items-center justify-between gap-6">
-            <Link href="/" className="shrink-0">
-              <BrandMark />
+          <div className="flex min-h-[5.25rem] items-center justify-between gap-4 py-3 lg:gap-8">
+            <Link href="/" className="flex shrink-0 items-center" aria-label="Retour a l'accueil">
+              <BrandLogo variant="dark" size="lg" className="max-w-[11rem] sm:max-w-[13rem]" />
             </Link>
 
-            <nav className="hidden items-center gap-8 lg:flex">
+            <nav className="hidden flex-1 items-center justify-center gap-8 lg:flex">
               {navigation.map((item) => {
                 const isActive =
                   item.href === '/' ? currentPath === item.href : currentPath.startsWith(item.href)
@@ -140,12 +141,13 @@ export default function MainLayout({ children }: { children: ReactNode }) {
               <Link
                 href="/checkout"
                 className="flex h-10 w-10 items-center justify-center rounded-full border border-forest/10 text-forest"
+                aria-label="Ouvrir la caisse"
               >
                 <BagIcon />
               </Link>
               {page.props.user ? (
                 <Form route="session.destroy" className="flex items-center gap-3">
-                  <span className="rounded-full border border-gold/25 bg-gold/10 px-3 py-2 text-xs font-semibold tracking-[0.25em] text-forest uppercase">
+                  <span className="flex h-10 min-w-10 items-center justify-center rounded-full border border-gold/25 bg-gold/10 px-3 text-xs font-semibold tracking-[0.25em] text-forest uppercase">
                     {page.props.user.initials}
                   </span>
                   <button type="submit" className="btn-secondary !px-4 !py-2">
@@ -212,11 +214,16 @@ export default function MainLayout({ children }: { children: ReactNode }) {
 
       <footer className="mt-10 bg-forest text-white">
         <div className="shell py-14">
-          <div className="grid gap-12 lg:grid-cols-[1.2fr_0.8fr_0.8fr_0.8fr]">
+          <div className="grid gap-12 lg:grid-cols-[1.25fr_0.8fr_0.8fr_0.8fr]">
             <div>
-              <BrandMark tone="light" />
+              <div className="flex items-end gap-4">
+                <BrandLogo variant="light" size="lg" className="max-w-[12rem] sm:max-w-[14rem]" />
+                <div className="flex h-14 w-14 items-center justify-center rounded-full border border-white/12 bg-white/8">
+                  <BrandSilhouette size={32} />
+                </div>
+              </div>
               <p className="mt-6 max-w-md text-sm leading-7 text-white/72">
-                TozalaClass signe un art de vivre entre mode premium, entretien textile, cérémonies
+                TozalaClass signe un art de vivre entre mode premium, entretien textile, ceremonies
                 et conseil en image.
               </p>
             </div>
@@ -242,7 +249,7 @@ export default function MainLayout({ children }: { children: ReactNode }) {
           </div>
 
           <div className="mt-12 flex flex-col gap-4 border-t border-white/10 pt-6 text-sm text-white/55 sm:flex-row sm:items-center sm:justify-between">
-            <p>TozalaClass, Kinshasa. Style en temps réel.</p>
+            <p>TozalaClass, Kinshasa. Style en temps reel.</p>
             <p>contact@tozalaclass.com</p>
           </div>
         </div>

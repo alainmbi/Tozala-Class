@@ -16,14 +16,14 @@ export type Product = {
 export const products: Product[] = [
   {
     id: 1,
-    name: 'Costume Héritage Anthracite',
+    name: 'Costume Heritage Anthracite',
     slug: 'costume-heritage-anthracite',
     subtitle: 'Tailoring signature',
     category: 'Homme',
     price: 1280,
     description:
-      'Une silhouette structurée pensée pour les grandes entrées, avec un tombé net et une main souple.',
-    material: 'Laine super 120s et finitions satinées',
+      'Une silhouette structuree pensee pour les grandes entrees, avec un tombe net et une main souple.',
+    material: 'Laine super 120s et finitions satinees',
     sizes: ['48', '50', '52', '54'],
     image:
       'https://images.unsplash.com/photo-1594938298603-c8148c4dae35?auto=format&fit=crop&w=900&q=80',
@@ -36,14 +36,14 @@ export const products: Product[] = [
   },
   {
     id: 2,
-    name: 'Robe Aura Émeraude',
+    name: 'Robe Aura Emeraude',
     slug: 'robe-aura-emeraude',
-    subtitle: 'Couture drapée',
+    subtitle: 'Couture drapee',
     category: 'Femme',
     price: 1540,
     description:
-      'Une robe de réception au drapé sculptural, pensée pour capter la lumière avec noblesse.',
-    material: 'Crêpe de soie et doublure satin',
+      'Une robe de reception au drape sculptural, pensee pour capter la lumiere avec noblesse.',
+    material: 'Crepe de soie et doublure satin',
     sizes: ['36', '38', '40', '42'],
     image:
       'https://images.unsplash.com/photo-1566174053879-31528523f8ae?auto=format&fit=crop&w=900&q=80',
@@ -58,11 +58,11 @@ export const products: Product[] = [
     id: 3,
     name: 'Blazer Minuit Signature',
     slug: 'blazer-minuit-signature',
-    subtitle: 'Ligne cérémoniale',
+    subtitle: 'Ligne ceremoniale',
     category: 'Homme',
     price: 890,
     description:
-      'Un blazer à l’épaule franche pour les rendez-vous qui exigent présence, aplomb et raffinement.',
+      "Un blazer a l'epaule franche pour les rendez-vous qui exigent presence, aplomb et raffinement.",
     material: 'Laine froide et revers en soie',
     sizes: ['48', '50', '52'],
     image:
@@ -81,7 +81,7 @@ export const products: Product[] = [
     category: 'Homme',
     price: 240,
     description:
-      'Une chemise précise et légère, pensée pour les superpositions raffinées et l’usage quotidien premium.',
+      'Une chemise precise et legere, pensee pour les superpositions raffinees et un usage quotidien premium.',
     material: 'Popeline de coton italien',
     sizes: ['S', 'M', 'L', 'XL'],
     image:
@@ -94,14 +94,14 @@ export const products: Product[] = [
   },
   {
     id: 5,
-    name: 'Robe Héloïse Sable',
+    name: 'Robe Heloise Sable',
     slug: 'robe-heloise-sable',
-    subtitle: 'Fluidité moderne',
+    subtitle: 'Fluidite moderne',
     category: 'Femme',
     price: 720,
     description:
-      'Une pièce fluide et sophistiquée, idéale pour les célébrations en journée et les réceptions intimes.',
-    material: 'Viscose satinée et taille structurée',
+      'Une piece fluide et sophistiquee, ideale pour les celebrations en journee et les receptions intimes.',
+    material: 'Viscose satinee et taille structuree',
     sizes: ['36', '38', '40', '42', '44'],
     image:
       'https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=900&q=80',
@@ -119,8 +119,8 @@ export const products: Product[] = [
     category: 'Accessoires',
     price: 560,
     description:
-      'Un sac à main structuré, pensé comme une pièce d’architecture douce au service du quotidien.',
-    material: 'Cuir pleine fleur et doublure suédée',
+      "Un sac a main structure, pense comme une piece d'architecture douce au service du quotidien.",
+    material: 'Cuir pleine fleur et doublure suedee',
     sizes: ['Unique'],
     image:
       'https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=900&q=80',
@@ -133,14 +133,14 @@ export const products: Product[] = [
   },
   {
     id: 7,
-    name: 'Derbies Cuir Opéra',
+    name: 'Derbies Cuir Opera',
     slug: 'derbies-cuir-opera',
-    subtitle: 'Main de l’atelier',
+    subtitle: "Main de l'atelier",
     category: 'Accessoires',
     price: 410,
     description:
-      'Des derbies à la patine profonde, avec une ligne fine pour accompagner les tenues de cérémonie.',
-    material: 'Cuir glacé et semelle cousue',
+      'Des derbies a la patine profonde, avec une ligne fine pour accompagner les tenues de ceremonie.',
+    material: 'Cuir glace et semelle cousue',
     sizes: ['40', '41', '42', '43', '44'],
     image:
       'https://images.unsplash.com/photo-1614252235316-8c857d38b5f4?auto=format&fit=crop&w=900&q=80',
@@ -153,13 +153,13 @@ export const products: Product[] = [
   },
   {
     id: 8,
-    name: 'Étole Nocturne',
+    name: 'Etole Nocturne',
     slug: 'etole-nocturne',
-    subtitle: 'Accessoire de réception',
+    subtitle: 'Accessoire de reception',
     category: 'Accessoires',
     price: 180,
     description:
-      'Une étole légère au tombé noble, parfaite pour les soirées et les silhouettes cérémonie.',
+      'Une etole legere au tombe noble, parfaite pour les soirees et les silhouettes ceremonie.',
     material: 'Mousseline de soie',
     sizes: ['Unique'],
     image:

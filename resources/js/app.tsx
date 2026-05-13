@@ -1,5 +1,6 @@
 import './css/app.css'
 import { client } from './client.js'
+import { BrandLoader } from './components/common/BrandLoader.js'
 import type { PageComponent } from './lib/inertia.js'
 import MainLayout from './layouts/MainLayout.js'
 import { createRoot } from 'react-dom/client'
@@ -17,6 +18,10 @@ const pagePathMap: Record<string, string> = {
   services: './pages/Services.tsx',
   checkout: './pages/Checkout.tsx',
 }
+const loaderHost = document.getElementById('brand-loader-root')
+const loaderRoot = loaderHost ? createRoot(loaderHost) : null
+
+loaderRoot?.render(<BrandLoader />)
 
 createInertiaApp({
   title: (title) => (title ? `${title} - ${appName}` : appName),
@@ -37,6 +42,14 @@ createInertiaApp({
         <App {...props} />
       </TuyauProvider>
     )
+
+    if (loaderHost) {
+      loaderHost.classList.add('brand-loader-exit')
+      window.setTimeout(() => {
+        loaderRoot?.unmount()
+        loaderHost.remove()
+      }, 420)
+    }
   },
   progress: {
     color: '#AE8044',

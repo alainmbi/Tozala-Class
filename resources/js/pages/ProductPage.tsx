@@ -1,9 +1,9 @@
 import { Head, Link } from '@inertiajs/react'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { getProductById, getRelatedProducts } from '../lib/catalog.js'
-import { formatPrice } from '../lib/format.js'
 import { ProductCard } from '../components/ProductCard.js'
 import { SectionHeading } from '../components/SectionHeading.js'
+import { formatPrice } from '../lib/format.js'
 import type { PageComponent } from '../lib/inertia.js'
 
 type ProductPageProps = {
@@ -15,14 +15,18 @@ const ProductPage: PageComponent<ProductPageProps> = ({ productId }) => {
   const [selectedImage, setSelectedImage] = useState(product?.gallery[0] ?? '')
   const [selectedSize, setSelectedSize] = useState(product?.sizes[0] ?? '')
   const [quantity, setQuantity] = useState(1)
+  const [cartMessage, setCartMessage] = useState('')
 
   useEffect(() => {
     if (product) {
       setSelectedImage(product.gallery[0])
       setSelectedSize(product.sizes[0] ?? '')
       setQuantity(1)
+      setCartMessage('')
     }
   }, [productId, product])
+
+  const lineTotal = useMemo(() => (product ? product.price * quantity : 0), [product, quantity])
 
   if (!product) {
     return (
@@ -34,11 +38,11 @@ const ProductPage: PageComponent<ProductPageProps> = ({ productId }) => {
               <p className="eyebrow">Catalogue</p>
               <h1 className="mt-4 font-display text-4xl text-forest">Produit introuvable</h1>
               <p className="mx-auto mt-4 max-w-xl text-base leading-8 text-black/65">
-                Cette pièce ne figure pas dans la collection statique actuelle. Vous pouvez revenir
-                à la boutique pour découvrir les sélections disponibles.
+                Cette piece ne figure pas dans la collection statique actuelle. Vous pouvez revenir
+                a la boutique pour decouvrir les selections disponibles.
               </p>
               <Link href="/shop" className="btn-primary mt-8">
-                Retour à la boutique
+                Retour a la boutique
               </Link>
             </div>
           </div>
@@ -48,6 +52,16 @@ const ProductPage: PageComponent<ProductPageProps> = ({ productId }) => {
   }
 
   const relatedProducts = getRelatedProducts(product.category, product.id)
+
+  function handleAddToCart() {
+    if (!product) {
+      return
+    }
+
+    setCartMessage(
+      `${quantity} article${quantity > 1 ? 's' : ''} ${product.name} pret${quantity > 1 ? 's' : ''} pour la caisse.`
+    )
+  }
 
   return (
     <>
@@ -98,8 +112,18 @@ const ProductPage: PageComponent<ProductPageProps> = ({ productId }) => {
 
               <div className="mt-8 rounded-[1.75rem] bg-forest px-6 py-5 text-white">
                 <div className="flex items-center justify-between gap-4">
-                  <span className="text-sm tracking-[0.22em] uppercase text-white/70">Prix</span>
+                  <span className="text-sm tracking-[0.22em] uppercase text-white/70">
+                    Prix unitaire
+                  </span>
                   <span className="font-display text-3xl">{formatPrice(product.price)}</span>
+                </div>
+                <div className="mt-4 flex items-center justify-between gap-4 border-t border-white/10 pt-4">
+                  <span className="text-sm tracking-[0.22em] uppercase text-white/70">
+                    Total article
+                  </span>
+                  <span className="font-display text-3xl text-[#AE8044]">
+                    {formatPrice(lineTotal)}
+                  </span>
                 </div>
               </div>
 
@@ -128,7 +152,7 @@ const ProductPage: PageComponent<ProductPageProps> = ({ productId }) => {
 
               <div className="mt-8">
                 <p className="text-sm font-semibold tracking-[0.22em] text-forest uppercase">
-                  Quantité
+                  Quantite
                 </p>
                 <div className="mt-4 inline-flex items-center rounded-full border border-black/8 bg-white p-1">
                   <button
@@ -150,26 +174,35 @@ const ProductPage: PageComponent<ProductPageProps> = ({ productId }) => {
               </div>
 
               <div className="mt-8 grid gap-4 sm:grid-cols-2">
-                <button type="button" className="btn-primary">
+                <button type="button" className="btn-primary" onClick={handleAddToCart}>
                   Ajouter au panier
                 </button>
-                <Link href="/checkout" className="btn-secondary">
-                  Passer à la caisse
+                <Link
+                  href={`/checkout?productId=${product.id}&quantity=${quantity}`}
+                  className="btn-secondary"
+                >
+                  Passer a la caisse
                 </Link>
               </div>
 
+              {cartMessage ? (
+                <div className="mt-5 rounded-[1.35rem] border border-gold/25 bg-gold/8 px-4 py-3 text-sm text-forest">
+                  {cartMessage}
+                </div>
+              ) : null}
+
               <div className="mt-8 grid gap-4 rounded-[1.75rem] border border-black/6 bg-ivory p-6 text-sm leading-7 text-black/65">
                 <div className="flex items-start justify-between gap-4">
-                  <span className="font-semibold text-forest">Matière</span>
+                  <span className="font-semibold text-forest">Matiere</span>
                   <span className="max-w-xs text-right">{product.material}</span>
                 </div>
                 <div className="flex items-start justify-between gap-4">
-                  <span className="font-semibold text-forest">Taille sélectionnée</span>
+                  <span className="font-semibold text-forest">Taille selectionnee</span>
                   <span>{selectedSize}</span>
                 </div>
                 <div className="flex items-start justify-between gap-4">
-                  <span className="font-semibold text-forest">Expérience</span>
-                  <span>Essayage conseillé en boutique ou rendez-vous privé.</span>
+                  <span className="font-semibold text-forest">Experience</span>
+                  <span>Essayage conseille en boutique ou rendez-vous prive.</span>
                 </div>
               </div>
             </div>
@@ -180,9 +213,9 @@ const ProductPage: PageComponent<ProductPageProps> = ({ productId }) => {
       <section className="section-space bg-white">
         <div className="shell">
           <SectionHeading
-            eyebrow="Complétez le look"
-            title="Autres pièces de cet univers."
-            description="Une sélection complémentaire pour composer une silhouette cohérente, cérémoniale et élégante."
+            eyebrow="Completez le look"
+            title="Autres pieces de cet univers."
+            description="Une selection complementaire pour composer une silhouette coherente, ceremoniale et elegante."
           />
 
           <div className="mt-12 grid gap-6 md:grid-cols-2 xl:grid-cols-4">

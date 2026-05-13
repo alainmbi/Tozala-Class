@@ -4,6 +4,7 @@ import { useEffect, useState, type ReactNode } from 'react'
 import { toast, Toaster } from 'sonner'
 import { BrandLogo } from '../components/common/BrandLogo.js'
 import { BrandSilhouette } from '../components/common/BrandSilhouette.js'
+import { ProductSearch } from '../components/search/ProductSearch.js'
 import type { SharedProps } from '../lib/shared.js'
 
 const navigation = [
@@ -88,10 +89,12 @@ function BagIcon() {
 export default function MainLayout({ children }: { children: ReactNode }) {
   const page = usePage<SharedProps>()
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [searchOpen, setSearchOpen] = useState(false)
   const currentPath = page.url.split('?')[0]
 
   useEffect(() => {
     setMobileOpen(false)
+    setSearchOpen(false)
     toast.dismiss()
   }, [page.url])
 
@@ -135,9 +138,14 @@ export default function MainLayout({ children }: { children: ReactNode }) {
             </nav>
 
             <div className="hidden items-center gap-3 lg:flex">
-              <span className="flex h-10 w-10 items-center justify-center rounded-full border border-forest/10 text-forest">
+              <button
+                type="button"
+                onClick={() => setSearchOpen((value) => !value)}
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-forest/10 text-forest transition hover:border-gold/40 hover:text-gold"
+                aria-label="Rechercher un article"
+              >
                 <SearchIcon />
-              </span>
+              </button>
               <Link
                 href="/checkout"
                 className="flex h-10 w-10 items-center justify-center rounded-full border border-forest/10 text-forest"
@@ -166,15 +174,34 @@ export default function MainLayout({ children }: { children: ReactNode }) {
               )}
             </div>
 
-            <button
-              type="button"
-              className="flex h-11 w-11 items-center justify-center rounded-full border border-forest/10 text-forest lg:hidden"
-              onClick={() => setMobileOpen((value) => !value)}
-              aria-label="Ouvrir le menu"
-            >
-              <MenuIcon />
-            </button>
+            <div className="flex items-center gap-2 lg:hidden">
+              <button
+                type="button"
+                onClick={() => setSearchOpen((value) => !value)}
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-forest/10 text-forest"
+                aria-label="Rechercher un article"
+              >
+                <SearchIcon />
+              </button>
+              <Link
+                href="/checkout"
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-forest/10 text-forest"
+                aria-label="Ouvrir la caisse"
+              >
+                <BagIcon />
+              </Link>
+              <button
+                type="button"
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-forest/10 text-forest"
+                onClick={() => setMobileOpen((value) => !value)}
+                aria-label="Ouvrir le menu"
+              >
+                <MenuIcon />
+              </button>
+            </div>
           </div>
+
+          <ProductSearch open={searchOpen} onClose={() => setSearchOpen(false)} />
 
           {mobileOpen && (
             <div className="border-t border-black/6 py-5 lg:hidden">
@@ -214,13 +241,10 @@ export default function MainLayout({ children }: { children: ReactNode }) {
 
       <footer className="mt-10 bg-forest text-white">
         <div className="shell py-14">
-          <div className="grid gap-12 lg:grid-cols-[1.25fr_0.8fr_0.8fr_0.8fr]">
+          <div className="grid gap-12 lg:grid-cols-[1.05fr_0.8fr_0.8fr_0.8fr]">
             <div>
-              <div className="flex items-end gap-4">
-                <BrandLogo variant="light" size="lg" className="max-w-[12rem] sm:max-w-[14rem]" />
-                <div className="flex h-14 w-14 items-center justify-center rounded-full border border-white/12 bg-white/8">
-                  <BrandSilhouette size={32} />
-                </div>
+              <div className="flex h-16 w-16 items-center justify-center rounded-full border border-white/12 bg-white/8">
+                <BrandSilhouette size={40} variant="light" decorative={false} alt="TozalaClass" />
               </div>
               <p className="mt-6 max-w-md text-sm leading-7 text-white/72">
                 TozalaClass signe un art de vivre entre mode premium, entretien textile, ceremonies

@@ -5,6 +5,9 @@ export interface ApiDefinition {
   home: typeof routes['home']
   shop: typeof routes['shop']
   services: typeof routes['services']
+  service: {
+    booking: typeof routes['service.booking']
+  }
   event: typeof routes['event']
   checkout: typeof routes['checkout']
   product: {

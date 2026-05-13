@@ -65,7 +65,7 @@ function getVisibleGallery(activeCategory: ShopGalleryCategory) {
       ? shopGalleryItems
       : shopGalleryItems.filter((item) => item.category === activeCategory)
 
-  return filtered.slice(0, 9)
+  return filtered.slice(0, 8)
 }
 
 const ShopPage: PageComponent = () => {
@@ -84,7 +84,8 @@ const ShopPage: PageComponent = () => {
       ? products
       : products.filter((product) => productCategorySlugMap[product.category] === deferredCategory)
 
-  const visibleProducts = allCategoryProducts
+  const visibleProducts = allCategoryProducts.slice(0, 12)
+  const hiddenProductsCount = Math.max(0, allCategoryProducts.length - visibleProducts.length)
 
   function handleCategoryChange(category: ShopGalleryCategory) {
     startTransition(() => {
@@ -98,14 +99,14 @@ const ShopPage: PageComponent = () => {
 
       <section className="section-space pt-10">
         <div className="shell">
-          <div className="grid gap-6 rounded-[2.5rem] bg-white p-6 shadow-[var(--shadow-soft)] lg:grid-cols-[0.72fr_1.28fr] lg:p-10">
-            <div className="flex flex-col justify-between rounded-[2rem] bg-forest px-6 py-8 text-white sm:px-8">
+          <div className="grid gap-5 rounded-[2.5rem] bg-white p-5 shadow-[var(--shadow-soft)] lg:grid-cols-[minmax(0,0.46fr)_minmax(0,0.54fr)] lg:p-8">
+            <div className="flex flex-col justify-between rounded-[2rem] bg-forest px-5 py-7 text-white sm:px-7 sm:py-8">
               <div>
                 <p className="eyebrow !text-white/70">La selection</p>
-                <h1 className="mt-5 font-display text-4xl leading-tight sm:text-5xl">
+                <h1 className="mt-5 font-display text-4xl leading-tight sm:text-[3.25rem]">
                   Heritage Modernity
                 </h1>
-                <p className="mt-5 max-w-xl text-base leading-8 text-white/75">
+                <p className="mt-5 max-w-md text-base leading-8 text-white/75">
                   Une boutique premium ou la mode, les accessoires, les lignes enfant et les
                   silhouettes medicales partagent la meme elegance.
                 </p>
@@ -138,14 +139,17 @@ const ShopPage: PageComponent = () => {
                   <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#AE8044]">
                     Produits
                   </p>
-                  <p className="mt-3 font-display text-3xl">{allCategoryProducts.length}</p>
+                  <p className="mt-3 font-display text-3xl">{visibleProducts.length}</p>
+                  <p className="mt-2 text-xs uppercase tracking-[0.22em] text-white/60">
+                    sur {allCategoryProducts.length}
+                  </p>
                 </div>
                 <div className="rounded-[1.5rem] border border-white/10 bg-white/8 p-4">
                   <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#AE8044]">
-                    Signature
+                    Galerie
                   </p>
                   <p className="mt-3 text-sm leading-7 text-white/72">
-                    TozalaClass fait vivre le style en temps reel pour tous.
+                    Huit visuels choisis pour garder un parcours dense, fluide et sans vide.
                   </p>
                 </div>
               </div>
@@ -157,26 +161,16 @@ const ShopPage: PageComponent = () => {
                   Galerie produits
                 </p>
                 <p className="text-xs font-medium uppercase tracking-[0.22em] text-[#AE8044]">
-                  {allCategoryProducts.length} visuels
+                  {visibleGallery.length} visuels
                 </p>
               </div>
 
-              <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-                {visibleGallery.map((item, index) => {
-                  const tallCard = index % 4 === 0
-                  const mediumCard = index % 3 === 1
-
-                  return (
+              <div className="max-h-[38rem] overflow-y-auto pr-1 sm:pr-2">
+                <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+                  {visibleGallery.map((item) => (
                     <article
                       key={`${deferredCategory}-${item.id}`}
-                      className={[
-                        'group relative overflow-hidden rounded-[1.5rem] bg-[#1b2521]',
-                        'transition-all duration-500 ease-out',
-                        tallCard ? 'sm:row-span-2' : '',
-                      ].join(' ')}
-                      style={{
-                        minHeight: tallCard ? '23rem' : mediumCard ? '18rem' : '16rem',
-                      }}
+                      className="group relative aspect-[4/5] overflow-hidden rounded-[1.5rem] bg-[#1b2521]"
                     >
                       <img
                         src={item.image}
@@ -193,8 +187,13 @@ const ShopPage: PageComponent = () => {
                         </h3>
                       </div>
                     </article>
-                  )
-                })}
+                  ))}
+                </div>
+              </div>
+
+              <div className="mt-4 flex items-center justify-between gap-3 border-t border-white/8 pt-4 text-xs uppercase tracking-[0.2em] text-white/55">
+                <span>Galerie condensee pour une lecture premium</span>
+                <span className="text-[#AE8044]">Scroll si necessaire</span>
               </div>
             </div>
           </div>
@@ -209,7 +208,19 @@ const ShopPage: PageComponent = () => {
             description={filterCopy[activeCategory].description}
           />
 
-          <div className="mt-12 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+          <div className="mt-6 flex flex-wrap items-center justify-between gap-3 rounded-[1.5rem] border border-black/6 bg-white px-5 py-4 text-sm text-black/62">
+            <p>
+              {visibleProducts.length} produits affiches par defaut pour garder une navigation
+              claire et elegante.
+            </p>
+            {hiddenProductsCount > 0 ? (
+              <p className="font-semibold uppercase tracking-[0.18em] text-gold">
+                {hiddenProductsCount} autres pieces sur cette categorie
+              </p>
+            ) : null}
+          </div>
+
+          <div className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
             {visibleProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}

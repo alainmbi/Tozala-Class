@@ -20,6 +20,7 @@ declare module '@adonisjs/inertia/types' {
     'event': ExtractProps<(typeof import('../../inertia/pages/event.tsx'))['default']>
     'home': ExtractProps<(typeof import('../../inertia/pages/home.tsx'))['default']>
     'product': ExtractProps<(typeof import('../../inertia/pages/product.tsx'))['default']>
+    'service_booking': ExtractProps<(typeof import('../../inertia/pages/service_booking.tsx'))['default']>
     'services': ExtractProps<(typeof import('../../inertia/pages/services.tsx'))['default']>
     'shop': ExtractProps<(typeof import('../../inertia/pages/shop.tsx'))['default']>
   }

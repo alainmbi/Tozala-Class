@@ -24,6 +24,12 @@ const routes = {
     tokens: [{"old":"/services","type":0,"val":"services","end":""}],
     types: placeholder as Registry['services']['types'],
   },
+  'service.booking': {
+    methods: ["GET","HEAD"],
+    pattern: '/services/reservation',
+    tokens: [{"old":"/services/reservation","type":0,"val":"services","end":""},{"old":"/services/reservation","type":0,"val":"reservation","end":""}],
+    types: placeholder as Registry['service.booking']['types'],
+  },
   'event': {
     methods: ["GET","HEAD"],
     pattern: '/event',

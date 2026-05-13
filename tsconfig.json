@@ -5,7 +5,9 @@
     "jsx": "react-jsx",
     "outDir": "./build",
     "ignoreDeprecations": "6.0",
+    "strict": true,
     "baseUrl": ".",
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "paths": {
       "~/*": ["./resources/js/*"],
       "@generated/*": ["./.adonisjs/client/*"]

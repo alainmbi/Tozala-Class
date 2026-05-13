@@ -43,6 +43,18 @@ export interface Registry {
       errorResponse: unknown
     }
   }
+  'service.booking': {
+    methods: ["GET","HEAD"]
+    pattern: '/services/reservation'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: unknown
+      errorResponse: unknown
+    }
+  }
   'event': {
     methods: ["GET","HEAD"]
     pattern: '/event'

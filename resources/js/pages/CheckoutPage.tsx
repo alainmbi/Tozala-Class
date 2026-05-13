@@ -9,6 +9,17 @@ type CheckoutItem = {
   quantity: number
 }
 
+type ServiceCheckoutSummary = {
+  serviceSlug: string
+  serviceName: string
+  serviceItem: string
+  servicePrice: number
+  servicePriceLabel: string
+  commune: string
+  nearestPressing: string
+  paymentOption: string
+}
+
 type PaymentMethod = 'delivery' | 'digital'
 type DigitalPaymentMode = 'mobile' | 'card'
 type MobileProvider = 'mpesa' | 'airtel' | 'africell' | 'orange'
@@ -31,6 +42,35 @@ function getCheckoutItemsFromUrl(url: string): CheckoutItem[] {
   return defaultCheckoutItems
 }
 
+function getServiceCheckoutFromUrl(url: string): ServiceCheckoutSummary | null {
+  const params = new URLSearchParams(url.split('?')[1] ?? '')
+
+  if (params.get('checkoutMode') !== 'service') {
+    return null
+  }
+
+  const serviceName = params.get('serviceName')
+  const serviceItem = params.get('serviceItem')
+  const servicePriceLabel = params.get('servicePrice')
+
+  if (!serviceName || !serviceItem || !servicePriceLabel) {
+    return null
+  }
+
+  const parsedPrice = Number(servicePriceLabel.replace(/[^0-9.]/g, ''))
+
+  return {
+    serviceSlug: params.get('serviceSlug') ?? 'pressing',
+    serviceName,
+    serviceItem,
+    servicePrice: Number.isFinite(parsedPrice) ? parsedPrice : 0,
+    servicePriceLabel,
+    commune: params.get('commune') ?? '',
+    nearestPressing: params.get('nearestPressing') ?? '',
+    paymentOption: params.get('paymentOption') ?? 'mobile-money',
+  }
+}
+
 const CheckoutPage: PageComponent = () => {
   const page = usePage()
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('digital')
@@ -39,13 +79,26 @@ const CheckoutPage: PageComponent = () => {
   const [mobileProvider, setMobileProvider] = useState<MobileProvider>('mpesa')
   const [cardProvider, setCardProvider] = useState<CardProvider>('visa')
   const [feedbackMessage, setFeedbackMessage] = useState('')
+  const [serviceCheckout, setServiceCheckout] = useState<ServiceCheckoutSummary | null>(() =>
+    getServiceCheckoutFromUrl(page.url)
+  )
   const [checkoutItems, setCheckoutItems] = useState<CheckoutItem[]>(() =>
     getCheckoutItemsFromUrl(page.url)
   )
 
   useEffect(() => {
     setCheckoutItems(getCheckoutItemsFromUrl(page.url))
+    setServiceCheckout(getServiceCheckoutFromUrl(page.url))
   }, [page.url])
+
+  useEffect(() => {
+    if (!serviceCheckout) {
+      return
+    }
+
+    setPaymentMethod('digital')
+    setDigitalPaymentMode(serviceCheckout.paymentOption === 'card-virement' ? 'card' : 'mobile')
+  }, [serviceCheckout])
 
   const selectedProducts = useMemo(
     () =>
@@ -67,11 +120,16 @@ const CheckoutPage: PageComponent = () => {
     [checkoutItems]
   )
 
-  const subtotal = selectedProducts.reduce((sum, item) => sum + item.lineTotal, 0)
-  const shipping = selectedProducts.length > 0 ? 35 : 0
+  const subtotal = serviceCheckout
+    ? serviceCheckout.servicePrice
+    : selectedProducts.reduce((sum, item) => sum + item.lineTotal, 0)
+  const shipping = serviceCheckout ? 0 : selectedProducts.length > 0 ? 35 : 0
   const total = subtotal + shipping
-  const buttonLabel =
-    paymentMethod === 'delivery' ? 'PASSER LA COMMANDE EN SECURITE' : 'PAYER EN SECURITE'
+  const buttonLabel = serviceCheckout
+    ? 'PAYER LE SERVICE EN SECURITE'
+    : paymentMethod === 'delivery'
+      ? 'PASSER LA COMMANDE EN SECURITE'
+      : 'PAYER EN SECURITE'
 
   function updateQuantity(productId: number, direction: 'increase' | 'decrease') {
     setCheckoutItems((items) =>
@@ -88,6 +146,12 @@ const CheckoutPage: PageComponent = () => {
   }
 
   function handlePrimaryAction() {
+    if (serviceCheckout) {
+      setFeedbackMessage('')
+      setPaymentModalOpen(true)
+      return
+    }
+
     if (paymentMethod === 'delivery') {
       setPaymentModalOpen(false)
       setFeedbackMessage(
@@ -105,7 +169,9 @@ const CheckoutPage: PageComponent = () => {
 
     // TODO: Connecter ici le futur prestataire de paiement mobile depuis AdonisJS.
     setFeedbackMessage(
-      `Demande ${mobileProvider.toUpperCase()} preparee. Une integration reelle pourra etre branchee plus tard sans changer l'interface.`
+      serviceCheckout
+        ? `Paiement ${mobileProvider.toUpperCase()} prepare pour ${serviceCheckout.serviceItem}. Une integration reelle pourra etre branchee plus tard sans changer l'interface.`
+        : `Demande ${mobileProvider.toUpperCase()} preparee. Une integration reelle pourra etre branchee plus tard sans changer l'interface.`
     )
     setPaymentModalOpen(false)
   }
@@ -115,7 +181,9 @@ const CheckoutPage: PageComponent = () => {
 
     // TODO: Brancher ici une vraie passerelle de paiement carte ou wallet.
     setFeedbackMessage(
-      `Confirmation ${cardProvider.toUpperCase()} simulee. Aucune donnee n'est envoyee a ce stade.`
+      serviceCheckout
+        ? `Confirmation ${cardProvider.toUpperCase()} simulee pour ${serviceCheckout.serviceItem}. Aucune donnee n'est envoyee a ce stade.`
+        : `Confirmation ${cardProvider.toUpperCase()} simulee. Aucune donnee n'est envoyee a ce stade.`
     )
     setPaymentModalOpen(false)
   }
@@ -128,9 +196,13 @@ const CheckoutPage: PageComponent = () => {
         <div className="shell">
           <div className="grid gap-8 lg:grid-cols-[1fr_0.72fr]">
             <div className="card-surface p-8 sm:p-10">
-              <p className="eyebrow">Passer a la caisse</p>
+              <p className="eyebrow">
+                {serviceCheckout ? 'Payer un service' : 'Passer a la caisse'}
+              </p>
               <h1 className="mt-4 font-display text-4xl text-forest sm:text-5xl">
-                Finaliser votre selection.
+                {serviceCheckout
+                  ? 'Finaliser votre reservation pressing.'
+                  : 'Finaliser votre selection.'}
               </h1>
 
               <form className="mt-10 grid gap-8">
@@ -147,42 +219,76 @@ const CheckoutPage: PageComponent = () => {
 
                 <section className="grid gap-4">
                   <h2 className="text-sm font-semibold tracking-[0.22em] text-forest uppercase">
-                    02. Adresse de livraison
+                    {serviceCheckout ? '02. Localisation' : '02. Adresse de livraison'}
                   </h2>
-                  <input className="field" type="text" placeholder="Adresse" />
-                  <div className="grid gap-4 md:grid-cols-3">
-                    <input className="field" type="text" placeholder="Ville" />
-                    <input className="field" type="text" placeholder="Commune" />
-                    <input className="field" type="text" placeholder="Code postal" />
-                  </div>
+                  {serviceCheckout ? (
+                    <div className="grid gap-4 md:grid-cols-2">
+                      <input
+                        className="field"
+                        type="text"
+                        defaultValue={serviceCheckout.commune}
+                        placeholder="Commune"
+                      />
+                      <input
+                        className="field"
+                        type="text"
+                        defaultValue={serviceCheckout.nearestPressing}
+                        placeholder="Pressing le plus proche"
+                      />
+                    </div>
+                  ) : (
+                    <>
+                      <input className="field" type="text" placeholder="Adresse" />
+                      <div className="grid gap-4 md:grid-cols-3">
+                        <input className="field" type="text" placeholder="Ville" />
+                        <input className="field" type="text" placeholder="Commune" />
+                        <input className="field" type="text" placeholder="Code postal" />
+                      </div>
+                    </>
+                  )}
                 </section>
 
                 <section className="grid gap-4">
                   <h2 className="text-sm font-semibold tracking-[0.22em] text-forest uppercase">
                     03. Methode de paiement
                   </h2>
-                  <label className="flex items-center gap-3 rounded-[1.5rem] border border-black/8 p-4">
-                    <input
-                      type="radio"
-                      name="payment"
-                      checked={paymentMethod === 'delivery'}
-                      onChange={() => setPaymentMethod('delivery')}
-                    />
-                    <span className="text-sm text-black/70">
-                      Paiement a la livraison ou en boutique
-                    </span>
-                  </label>
-                  <label className="flex items-center gap-3 rounded-[1.5rem] border border-black/8 p-4">
-                    <input
-                      type="radio"
-                      name="payment"
-                      checked={paymentMethod === 'digital'}
-                      onChange={() => setPaymentMethod('digital')}
-                    />
-                    <span className="text-sm text-black/70">
-                      Mobile money ou virement confirme par l'atelier
-                    </span>
-                  </label>
+                  {serviceCheckout ? (
+                    <div className="rounded-[1.5rem] border border-gold/20 bg-gold/8 p-4 text-sm leading-7 text-forest">
+                      Paiement en ligne requis pour ce pressing. Le mode choisi lors de la
+                      reservation est{' '}
+                      <span className="font-semibold">
+                        {serviceCheckout.paymentOption === 'card-virement'
+                          ? 'Carte / virement'
+                          : 'Mobile Money'}
+                      </span>
+                      .
+                    </div>
+                  ) : (
+                    <>
+                      <label className="flex items-center gap-3 rounded-[1.5rem] border border-black/8 p-4">
+                        <input
+                          type="radio"
+                          name="payment"
+                          checked={paymentMethod === 'delivery'}
+                          onChange={() => setPaymentMethod('delivery')}
+                        />
+                        <span className="text-sm text-black/70">
+                          Paiement a la livraison ou en boutique
+                        </span>
+                      </label>
+                      <label className="flex items-center gap-3 rounded-[1.5rem] border border-black/8 p-4">
+                        <input
+                          type="radio"
+                          name="payment"
+                          checked={paymentMethod === 'digital'}
+                          onChange={() => setPaymentMethod('digital')}
+                        />
+                        <span className="text-sm text-black/70">
+                          Mobile money ou virement confirme par l'atelier
+                        </span>
+                      </label>
+                    </>
+                  )}
                 </section>
 
                 {feedbackMessage ? (
@@ -201,10 +307,16 @@ const CheckoutPage: PageComponent = () => {
               <div className="flex items-center justify-between gap-4">
                 <div>
                   <p className="eyebrow">Votre choix</p>
-                  <h2 className="mt-3 font-display text-3xl text-forest">Resume de commande</h2>
+                  <h2 className="mt-3 font-display text-3xl text-forest">
+                    {serviceCheckout ? 'Resume du service' : 'Resume de commande'}
+                  </h2>
                 </div>
                 <Link
-                  href="/shop"
+                  href={
+                    serviceCheckout
+                      ? `/services/reservation?service=${serviceCheckout.serviceSlug}`
+                      : '/shop'
+                  }
                   className="text-xs font-semibold tracking-[0.22em] text-gold uppercase"
                 >
                   Modifier
@@ -212,53 +324,80 @@ const CheckoutPage: PageComponent = () => {
               </div>
 
               <div className="mt-8 space-y-5">
-                {selectedProducts.map(({ product, quantity, lineTotal }) => (
-                  <div key={product.id} className="rounded-[1.75rem] bg-ivory p-4">
-                    <div className="flex gap-4">
-                      <img
-                        src={product.image}
-                        alt={product.name}
-                        className="h-24 w-20 rounded-[1.25rem] object-cover"
-                      />
-                      <div className="flex flex-1 items-start justify-between gap-4">
-                        <div>
-                          <p className="font-display text-xl text-forest">{product.name}</p>
-                          <p className="mt-2 text-sm text-black/60">{product.subtitle}</p>
-                          <div className="mt-4 inline-flex items-center rounded-full border border-black/8 bg-white p-1">
-                            <button
-                              type="button"
-                              className="h-9 w-9 rounded-full text-lg text-forest"
-                              onClick={() => updateQuantity(product.id, 'decrease')}
-                            >
-                              -
-                            </button>
-                            <span className="min-w-10 text-center text-sm font-semibold">
-                              {quantity}
-                            </span>
-                            <button
-                              type="button"
-                              className="h-9 w-9 rounded-full text-lg text-forest"
-                              onClick={() => updateQuantity(product.id, 'increase')}
-                            >
-                              +
-                            </button>
-                          </div>
-                        </div>
-                        <div className="text-right">
-                          <p className="text-sm font-semibold tracking-[0.22em] text-forest uppercase">
-                            {formatPrice(product.price)}
-                          </p>
-                          <p className="mt-3 text-xs font-semibold uppercase tracking-[0.22em] text-gold">
-                            Total article
-                          </p>
-                          <p className="mt-1 font-display text-2xl text-forest">
-                            {formatPrice(lineTotal)}
-                          </p>
-                        </div>
+                {serviceCheckout ? (
+                  <div className="rounded-[1.75rem] bg-ivory p-5">
+                    <p className="font-display text-2xl text-forest">
+                      {serviceCheckout.serviceName}
+                    </p>
+                    <p className="mt-3 text-sm text-black/62">{serviceCheckout.serviceItem}</p>
+                    <div className="mt-5 grid gap-3 text-sm text-black/68">
+                      <div className="flex items-center justify-between rounded-[1.2rem] bg-white px-4 py-3">
+                        <span>Commune</span>
+                        <span className="font-semibold text-forest">{serviceCheckout.commune}</span>
+                      </div>
+                      <div className="flex items-center justify-between rounded-[1.2rem] bg-white px-4 py-3">
+                        <span>Pressing</span>
+                        <span className="font-semibold text-forest">
+                          {serviceCheckout.nearestPressing}
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between rounded-[1.2rem] bg-white px-4 py-3">
+                        <span>Tarif</span>
+                        <span className="font-semibold uppercase tracking-[0.14em] text-gold">
+                          {serviceCheckout.servicePriceLabel}
+                        </span>
                       </div>
                     </div>
                   </div>
-                ))}
+                ) : (
+                  selectedProducts.map(({ product, quantity, lineTotal }) => (
+                    <div key={product.id} className="rounded-[1.75rem] bg-ivory p-4">
+                      <div className="flex gap-4">
+                        <img
+                          src={product.image}
+                          alt={product.name}
+                          className="h-24 w-20 rounded-[1.25rem] object-cover"
+                        />
+                        <div className="flex flex-1 items-start justify-between gap-4">
+                          <div>
+                            <p className="font-display text-xl text-forest">{product.name}</p>
+                            <p className="mt-2 text-sm text-black/60">{product.subtitle}</p>
+                            <div className="mt-4 inline-flex items-center rounded-full border border-black/8 bg-white p-1">
+                              <button
+                                type="button"
+                                className="h-9 w-9 rounded-full text-lg text-forest"
+                                onClick={() => updateQuantity(product.id, 'decrease')}
+                              >
+                                -
+                              </button>
+                              <span className="min-w-10 text-center text-sm font-semibold">
+                                {quantity}
+                              </span>
+                              <button
+                                type="button"
+                                className="h-9 w-9 rounded-full text-lg text-forest"
+                                onClick={() => updateQuantity(product.id, 'increase')}
+                              >
+                                +
+                              </button>
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-sm font-semibold tracking-[0.22em] text-forest uppercase">
+                              {formatPrice(product.price)}
+                            </p>
+                            <p className="mt-3 text-xs font-semibold uppercase tracking-[0.22em] text-gold">
+                              Total article
+                            </p>
+                            <p className="mt-1 font-display text-2xl text-forest">
+                              {formatPrice(lineTotal)}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                )}
               </div>
 
               <div className="mt-8 space-y-4 border-t border-black/6 pt-6 text-sm text-black/65">

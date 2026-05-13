@@ -13,6 +13,7 @@ const pagePathMap: Record<string, string> = {
   product: './pages/Product.tsx',
   event: './pages/Event.tsx',
   services: './pages/Services.tsx',
+  service_booking: './pages/ServiceBooking.tsx',
   checkout: './pages/Checkout.tsx',
 }
 

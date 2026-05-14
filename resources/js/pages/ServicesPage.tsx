@@ -15,6 +15,29 @@ function getRequestedService(url: string) {
   return findServiceBySlug(params.get('service'))
 }
 
+const serviceHashToSlugMap = {
+  'pressing': 'pressing',
+  'retouche': 'couture-homme',
+  'conseil-image': 'conseil-image',
+  'couture-homme': 'couture-homme',
+  'couture-femme': 'couture-femme',
+  'decoration-evenement': 'decoration-evenement',
+} as const satisfies Record<string, ServiceItem['slug']>
+
+function getRequestedHash(url: string) {
+  const hashFromUrl = url.split('#')[1]
+
+  if (hashFromUrl) {
+    return decodeURIComponent(hashFromUrl)
+  }
+
+  if (typeof window !== 'undefined') {
+    return decodeURIComponent(window.location.hash.replace(/^#/, ''))
+  }
+
+  return ''
+}
+
 const serviceJourney = [
   [
     '01. Choisir le service',
@@ -34,6 +57,7 @@ const ServicesPage: PageComponent = () => {
   const page = usePage()
   const requestedService = useMemo(() => getRequestedService(page.url), [page.url])
   const selectedDetailRef = useRef<HTMLDivElement | null>(null)
+  const [activeHash, setActiveHash] = useState<string>(() => getRequestedHash(page.url))
   const [selectedServiceSlug, setSelectedServiceSlug] = useState<string | null>(
     requestedService?.slug ?? null
   )
@@ -44,6 +68,30 @@ const ServicesPage: PageComponent = () => {
   useEffect(() => {
     setSelectedServiceSlug(requestedService?.slug ?? null)
   }, [requestedService])
+
+  useEffect(() => {
+    function syncHash() {
+      setActiveHash(getRequestedHash(page.url))
+    }
+
+    syncHash()
+
+    if (typeof window !== 'undefined') {
+      window.addEventListener('hashchange', syncHash)
+      return () => window.removeEventListener('hashchange', syncHash)
+    }
+  }, [page.url])
+
+  useEffect(() => {
+    const mappedSlug =
+      activeHash && activeHash in serviceHashToSlugMap
+        ? serviceHashToSlugMap[activeHash as keyof typeof serviceHashToSlugMap]
+        : null
+
+    if (mappedSlug) {
+      setSelectedServiceSlug(mappedSlug)
+    }
+  }, [activeHash])
 
   useEffect(() => {
     if (!selectedServiceSlug || !selectedDetailRef.current) {
@@ -57,6 +105,10 @@ const ServicesPage: PageComponent = () => {
   }, [selectedServiceSlug])
 
   const selectedService = services.find((service) => service.slug === selectedServiceSlug) ?? null
+  const highlightedSlug =
+    activeHash && activeHash in serviceHashToSlugMap
+      ? serviceHashToSlugMap[activeHash as keyof typeof serviceHashToSlugMap]
+      : null
 
   function handleSelect(service: ServiceItem) {
     setSelectedServiceSlug(service.slug)
@@ -140,9 +192,24 @@ const ServicesPage: PageComponent = () => {
           <div className="mt-12 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
             {services.map((service) => (
               <Fragment key={service.id}>
+                {service.slug === 'couture-homme' ? (
+                  <span
+                    id="retouche"
+                    className="relative -top-28 block h-0 w-0"
+                    aria-hidden="true"
+                  />
+                ) : null}
+
                 {selectedService?.slug === service.slug ? (
                   <div ref={selectedDetailRef} className="md:col-span-2 xl:col-span-3">
-                    <div className="rounded-[2.5rem] bg-[#101513] p-6 text-white shadow-[var(--shadow-soft)] sm:p-8 lg:p-10">
+                    <div
+                      className={[
+                        'rounded-[2.5rem] bg-[#101513] p-6 text-white shadow-[var(--shadow-soft)] sm:p-8 lg:p-10',
+                        highlightedSlug === service.slug
+                          ? 'ring-1 ring-[#AE8044] ring-offset-2 ring-offset-white'
+                          : '',
+                      ].join(' ')}
+                    >
                       <div className="grid gap-8 lg:grid-cols-[minmax(0,0.48fr)_minmax(0,0.52fr)]">
                         <div>
                           <div className="flex flex-wrap items-start justify-between gap-4">
@@ -314,12 +381,22 @@ const ServicesPage: PageComponent = () => {
                   </div>
                 ) : null}
 
-                <ServiceCard
-                  service={service}
-                  active={selectedService?.slug === service.slug}
-                  showAction
-                  onSelect={handleSelect}
-                />
+                <div
+                  id={service.slug}
+                  className={[
+                    'rounded-[2.1rem] transition-all duration-300',
+                    highlightedSlug === service.slug
+                      ? 'bg-[#AE8044]/8 p-1 ring-1 ring-[#AE8044]/70'
+                      : '',
+                  ].join(' ')}
+                >
+                  <ServiceCard
+                    service={service}
+                    active={selectedService?.slug === service.slug}
+                    showAction
+                    onSelect={handleSelect}
+                  />
+                </div>
               </Fragment>
             ))}
           </div>

@@ -27,9 +27,12 @@ const footerColumns = [
   {
     title: 'Services',
     links: [
-      { label: 'Pressing', href: '/services' },
-      { label: 'Retouche', href: '/services' },
-      { label: 'Conseil image', href: '/services' },
+      { label: 'Pressing', href: '/services#pressing' },
+      { label: 'Retouche', href: '/services#retouche' },
+      { label: 'Conseil image', href: '/services#conseil-image' },
+      { label: 'Couture homme', href: '/services#couture-homme' },
+      { label: 'Couture femme', href: '/services#couture-femme' },
+      { label: 'Decoration evenement', href: '/services#decoration-evenement' },
     ],
   },
   {

@@ -3,10 +3,22 @@
  * Un texte absent d'une langue reste affiché en français.
  */
 export const french: Record<string, string> = {
-  Medecin: 'Médecin',
+  'Medecin': 'Médecin',
+  'Invalid user credentials': 'Email ou mot de passe incorrect.',
 }
 
 export const english: Record<string, string> = {
+  'Invalid user credentials': 'Incorrect email or password.',
+  'Ce champ est obligatoire.': 'This field is required.',
+  'Ce champ est invalide.': 'This field is invalid.',
+  'Adresse email invalide.': 'Invalid email address.',
+  'Ce champ est trop long.': 'This field is too long.',
+  'Le mot de passe doit contenir au moins 8 caractères.':
+    'The password must be at least 8 characters.',
+  'Le mot de passe ne doit pas dépasser 32 caractères.':
+    'The password must not exceed 32 characters.',
+  'Les mots de passe ne correspondent pas.': 'The passwords do not match.',
+  'Cette adresse email est déjà utilisée.': 'This email address is already in use.',
   '01. Informations de contact': '01. Contact information',
   'Création couture': 'Couture creation',
   'Atelier TozalaClass': 'TozalaClass workshop',
@@ -628,6 +640,17 @@ export const english: Record<string, string> = {
 
 /** À faire relire par un locuteur natif avant publication. */
 export const lingala: Record<string, string> = {
+  'Invalid user credentials': 'Email to mot de passe ezali malamu te.',
+  'Ce champ est obligatoire.': 'Esengeli otondisa esika oyo.',
+  'Ce champ est invalide.': 'Esika oyo ezali malamu te.',
+  'Adresse email invalide.': 'Adresse email ezali malamu te.',
+  'Ce champ est trop long.': 'Esika oyo eleki molai.',
+  'Le mot de passe doit contenir au moins 8 caractères.':
+    'Mot de passe esengeli kozala na ba caractère 8 to koleka.',
+  'Le mot de passe ne doit pas dépasser 32 caractères.':
+    'Mot de passe esengeli koleka ba caractère 32 te.',
+  'Les mots de passe ne correspondent pas.': 'Ba mot de passe ekokani te.',
+  'Cette adresse email est déjà utilisée.': 'Adresse email oyo esi esalelami.',
   'Création couture': 'Mosala ya couture',
   'Atelier TozalaClass': 'Atelier ya TozalaClass',
   'Paiement possible pour': 'Kofuta ekoki mpo na',

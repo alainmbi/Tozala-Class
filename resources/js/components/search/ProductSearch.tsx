@@ -42,12 +42,12 @@ export function ProductSearch({ open, onClose }: ProductSearchProps) {
     }
 
     return products.filter((product) =>
-      [product.name, product.category, product.description, product.subtitle]
+      [product.name, t(product.category), t(product.description), t(product.subtitle)]
         .join(' ')
         .toLowerCase()
         .includes(trimmedQuery)
     )
-  }, [trimmedQuery])
+  }, [trimmedQuery, t])
 
   if (!open) {
     return null

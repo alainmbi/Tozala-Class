@@ -1,11 +1,14 @@
 import { Link } from '@adonisjs/inertia/react'
+import { usePage } from '@inertiajs/react'
 import type { ReactNode } from 'react'
+import type { SharedProps } from '../lib/shared.js'
 import { BrandLogo } from '../components/common/BrandLogo.js'
 import { BrandSilhouette } from '../components/common/BrandSilhouette.js'
 import { useLanguage } from '../lib/preferences.js'
 
 export default function AuthLayout({ children }: { children: ReactNode }) {
   const { t } = useLanguage()
+  const page = usePage<SharedProps>()
 
   return (
     <div className="min-h-screen bg-forest px-4 py-8 sm:px-6 lg:px-8">
@@ -36,6 +39,11 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
               {t('Retour maison')}{' '}
             </Link>
           </div>
+          {page.props.flash.error && (
+            <div className="mx-auto mb-6 w-full max-w-xl rounded-2xl border border-red-300/50 bg-red-500/10 px-4 py-3 text-sm text-red-600">
+              {t(page.props.flash.error)}
+            </div>
+          )}
           {children}
         </div>
       </div>

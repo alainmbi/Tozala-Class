@@ -14,7 +14,7 @@
     "test": "node ace test",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "typecheck": "npx.cmd tsc --noEmit && npx.cmd tsc --noEmit --project resources/js/tsconfig.json"
+    "typecheck": "npx tsc --noEmit && npx tsc --noEmit --project resources/js/tsconfig.json"
   },
   "imports": {
     "#controllers/*": "./app/controllers/*.js",

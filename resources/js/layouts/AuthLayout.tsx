@@ -2,8 +2,11 @@ import { Link } from '@adonisjs/inertia/react'
 import type { ReactNode } from 'react'
 import { BrandLogo } from '../components/common/BrandLogo.js'
 import { BrandSilhouette } from '../components/common/BrandSilhouette.js'
+import { useLanguage } from '../lib/preferences.js'
 
 export default function AuthLayout({ children }: { children: ReactNode }) {
+  const { t } = useLanguage()
+
   return (
     <div className="min-h-screen bg-forest px-4 py-8 sm:px-6 lg:px-8">
       <div className="mx-auto flex min-h-[calc(100vh-4rem)] max-w-6xl overflow-hidden rounded-[2.5rem] bg-white shadow-[var(--shadow-soft)]">
@@ -11,15 +14,16 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
           <div>
             <BrandLogo variant="light" size="lg" className="max-w-[12rem]" />
             <p className="mt-10 max-w-sm font-display text-4xl leading-tight">
-              L'elegance commence avant meme l'essayage.
+              {t("L'élégance commence avant même l'essayage.")}{' '}
             </p>
           </div>
           <div className="rounded-[2rem] border border-white/10 bg-white/8 p-6 text-sm leading-7 text-white/75">
             <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-full border border-white/12 bg-white/8">
               <BrandSilhouette size={34} />
             </div>
-            Compte client, suivi atelier, services premium et acces aux nouvelles pieces de la
-            maison.
+            {t(
+              'Compte client, suivi atelier, services premium et accès aux nouvelles pièces de la maison.'
+            )}{' '}
           </div>
         </div>
 
@@ -29,7 +33,7 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
               <BrandLogo variant="dark" size="md" className="max-w-[10.5rem]" />
             </Link>
             <Link href="/" className="text-xs font-semibold tracking-[0.28em] text-gold uppercase">
-              Retour maison
+              {t('Retour maison')}{' '}
             </Link>
           </div>
           {children}

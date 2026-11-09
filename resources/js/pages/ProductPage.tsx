@@ -5,12 +5,15 @@ import { ProductCard } from '../components/ProductCard.js'
 import { SectionHeading } from '../components/SectionHeading.js'
 import { formatPrice } from '../lib/format.js'
 import type { PageComponent } from '../lib/inertia.js'
+import { useLanguage } from '../lib/preferences.js'
 
 type ProductPageProps = {
   productId: number | string
 }
 
 const ProductPage: PageComponent<ProductPageProps> = ({ productId }) => {
+  const { t } = useLanguage()
+
   const product = getProductById(Number(productId))
   const [selectedImage, setSelectedImage] = useState(product?.gallery[0] ?? '')
   const [selectedSize, setSelectedSize] = useState(product?.sizes[0] ?? '')
@@ -31,18 +34,19 @@ const ProductPage: PageComponent<ProductPageProps> = ({ productId }) => {
   if (!product) {
     return (
       <>
-        <Head title="Produit introuvable" />
+        <Head title={t('Produit introuvable')} />
         <section className="section-space">
           <div className="shell">
             <div className="card-surface p-10 text-center">
-              <p className="eyebrow">Catalogue</p>
-              <h1 className="mt-4 font-display text-4xl text-forest">Produit introuvable</h1>
+              <p className="eyebrow">{t('Catalogue')}</p>
+              <h1 className="mt-4 font-display text-4xl text-forest">{t('Produit introuvable')}</h1>
               <p className="mx-auto mt-4 max-w-xl text-base leading-8 text-black/65">
-                Cette piece ne figure pas dans la collection statique actuelle. Vous pouvez revenir
-                a la boutique pour decouvrir les selections disponibles.
+                {t(
+                  'Cette pièce ne figure pas dans la collection statique actuelle. Vous pouvez revenir à la boutique pour découvrir les sélections disponibles.'
+                )}{' '}
               </p>
               <Link href="/shop" className="btn-primary mt-8">
-                Retour a la boutique
+                {t('Retour à la boutique')}{' '}
               </Link>
             </div>
           </div>
@@ -65,7 +69,7 @@ const ProductPage: PageComponent<ProductPageProps> = ({ productId }) => {
 
   return (
     <>
-      <Head title={product.name} />
+      <Head title={t(product.name)} />
 
       <section className="section-space pt-10">
         <div className="shell">
@@ -84,7 +88,7 @@ const ProductPage: PageComponent<ProductPageProps> = ({ productId }) => {
                   >
                     <img
                       src={image}
-                      alt={product.name}
+                      alt={t(product.name)}
                       className="aspect-square h-full w-full object-cover"
                     />
                   </button>
@@ -94,42 +98,40 @@ const ProductPage: PageComponent<ProductPageProps> = ({ productId }) => {
               <div className="order-1 overflow-hidden rounded-[2.5rem] bg-white shadow-[var(--shadow-soft)] lg:order-2">
                 <img
                   src={selectedImage}
-                  alt={product.name}
+                  alt={t(product.name)}
                   className="h-full w-full object-cover"
                 />
               </div>
             </div>
 
             <div className="card-surface p-8 sm:p-10">
-              <p className="eyebrow">{product.category}</p>
+              <p className="eyebrow">{t(product.category)}</p>
               <h1 className="mt-4 font-display text-4xl leading-tight text-forest sm:text-5xl">
-                {product.name}
+                {t(product.name)}
               </h1>
               <p className="mt-3 text-sm font-semibold tracking-[0.22em] text-gold uppercase">
-                {product.subtitle}
+                {t(product.subtitle)}
               </p>
-              <p className="mt-6 text-base leading-8 text-black/65">{product.description}</p>
+              <p className="mt-6 text-base leading-8 text-black/65">{t(product.description)}</p>
 
               <div className="mt-8 rounded-[1.75rem] bg-forest px-6 py-5 text-white">
                 <div className="flex items-center justify-between gap-4">
                   <span className="text-sm tracking-[0.22em] uppercase text-white/70">
-                    Prix unitaire
+                    {t('Prix unitaire')}{' '}
                   </span>
                   <span className="font-display text-3xl">{formatPrice(product.price)}</span>
                 </div>
                 <div className="mt-4 flex items-center justify-between gap-4 border-t border-white/10 pt-4">
                   <span className="text-sm tracking-[0.22em] uppercase text-white/70">
-                    Total article
+                    {t('Total article')}{' '}
                   </span>
-                  <span className="font-display text-3xl text-[#AE8044]">
-                    {formatPrice(lineTotal)}
-                  </span>
+                  <span className="font-display text-3xl text-gold">{formatPrice(lineTotal)}</span>
                 </div>
               </div>
 
               <div className="mt-8">
                 <p className="text-sm font-semibold tracking-[0.22em] text-forest uppercase">
-                  Tailles
+                  {t('Tailles')}{' '}
                 </p>
                 <div className="mt-4 flex flex-wrap gap-3">
                   {product.sizes.map((size) => (
@@ -144,7 +146,7 @@ const ProductPage: PageComponent<ProductPageProps> = ({ productId }) => {
                           : 'border-black/8 bg-white text-forest hover:border-gold/40',
                       ].join(' ')}
                     >
-                      {size}
+                      {t(size)}
                     </button>
                   ))}
                 </div>
@@ -152,7 +154,7 @@ const ProductPage: PageComponent<ProductPageProps> = ({ productId }) => {
 
               <div className="mt-8">
                 <p className="text-sm font-semibold tracking-[0.22em] text-forest uppercase">
-                  Quantite
+                  {t('Quantité')}{' '}
                 </p>
                 <div className="mt-4 inline-flex items-center rounded-full border border-black/8 bg-white p-1">
                   <button
@@ -175,34 +177,34 @@ const ProductPage: PageComponent<ProductPageProps> = ({ productId }) => {
 
               <div className="mt-8 grid gap-4 sm:grid-cols-2">
                 <button type="button" className="btn-primary" onClick={handleAddToCart}>
-                  Ajouter au panier
+                  {t('Ajouter au panier')}{' '}
                 </button>
                 <Link
                   href={`/checkout?productId=${product.id}&quantity=${quantity}`}
                   className="btn-secondary"
                 >
-                  Passer a la caisse
+                  {t('Passer à la caisse')}{' '}
                 </Link>
               </div>
 
               {cartMessage ? (
                 <div className="mt-5 rounded-[1.35rem] border border-gold/25 bg-gold/8 px-4 py-3 text-sm text-forest">
-                  {cartMessage}
+                  {t(cartMessage)}
                 </div>
               ) : null}
 
               <div className="mt-8 grid gap-4 rounded-[1.75rem] border border-black/6 bg-ivory p-6 text-sm leading-7 text-black/65">
                 <div className="flex items-start justify-between gap-4">
-                  <span className="font-semibold text-forest">Matiere</span>
-                  <span className="max-w-xs text-right">{product.material}</span>
+                  <span className="font-semibold text-forest">{t('Matière')}</span>
+                  <span className="max-w-xs text-right">{t(product.material)}</span>
                 </div>
                 <div className="flex items-start justify-between gap-4">
-                  <span className="font-semibold text-forest">Taille selectionnee</span>
-                  <span>{selectedSize}</span>
+                  <span className="font-semibold text-forest">{t('Taille sélectionnée')}</span>
+                  <span>{t(selectedSize)}</span>
                 </div>
                 <div className="flex items-start justify-between gap-4">
-                  <span className="font-semibold text-forest">Experience</span>
-                  <span>Essayage conseille en boutique ou rendez-vous prive.</span>
+                  <span className="font-semibold text-forest">{t('Expérience')}</span>
+                  <span>{t('Essayage conseillé en boutique ou rendez-vous privé.')}</span>
                 </div>
               </div>
             </div>
@@ -213,9 +215,10 @@ const ProductPage: PageComponent<ProductPageProps> = ({ productId }) => {
       <section className="section-space bg-white">
         <div className="shell">
           <SectionHeading
-            eyebrow="Completez le look"
-            title="Autres pieces de cet univers."
-            description="Une selection complementaire pour composer une silhouette coherente, ceremoniale et elegante."
+            eyebrow="Complétez le look"
+            title="Autres pièces de cet univers."
+            description="Une sélection complémentaire pour composer une silhouette cohérente, cérémoniale et élégante."
+            align="center"
           />
 
           <div className="mt-12 grid gap-6 md:grid-cols-2 xl:grid-cols-4">

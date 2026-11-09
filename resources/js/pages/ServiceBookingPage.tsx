@@ -8,6 +8,7 @@ import {
   type ServiceItem,
 } from '../data/services.js'
 import type { PageComponent } from '../lib/inertia.js'
+import { useLanguage } from '../lib/preferences.js'
 
 type PaymentOption = 'mobile-money' | 'card-virement'
 
@@ -51,6 +52,8 @@ function getInitialState(requestedService: ServiceItem | undefined): BookingForm
 }
 
 const ServiceBookingPage: PageComponent = () => {
+  const { t } = useLanguage()
+
   const page = usePage()
   const requestedService = useMemo(() => getRequestedService(page.url), [page.url])
   const [form, setForm] = useState<BookingFormState>(() => getInitialState(requestedService))
@@ -118,26 +121,27 @@ const ServiceBookingPage: PageComponent = () => {
 
   return (
     <>
-      <Head title="Reservation service" />
+      <Head title={t('Réservation service')} />
 
       <section className="section-space pt-10">
         <div className="shell">
           <div className="grid gap-8 lg:grid-cols-[minmax(0,0.66fr)_minmax(0,0.34fr)]">
             <div className="card-surface p-8 sm:p-10">
-              <p className="eyebrow">Reservation service</p>
+              <p className="eyebrow">{t('Réservation service')}</p>
               <h1 className="mt-4 font-display text-4xl text-forest sm:text-5xl">
-                Precisez votre besoin avant toute validation.
+                {t('Précisez votre besoin avant toute validation.')}{' '}
               </h1>
               <p className="mt-5 max-w-3xl text-base leading-8 text-black/65">
-                Ce formulaire remplace l ancien passage direct a la caisse. Pour le pressing, vous
-                pourrez continuer vers le paiement seulement apres avoir choisi votre tarif.
+                {t(
+                  "Ce formulaire remplace l'ancien passage direct à la caisse. Pour le pressing, vous pourrez continuer vers le paiement seulement après avoir choisi votre tarif."
+                )}{' '}
               </p>
 
               <form className="mt-10 grid gap-7" onSubmit={handleSubmit}>
                 <div className="grid gap-4 md:grid-cols-2">
                   <div>
                     <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.24em] text-forest">
-                      Nom complet
+                      {t('Nom complet')}{' '}
                     </label>
                     <input
                       className="field"
@@ -146,13 +150,13 @@ const ServiceBookingPage: PageComponent = () => {
                       onChange={(event) =>
                         updateField('fullName', (event.target as HTMLInputElement).value)
                       }
-                      placeholder="Votre nom complet"
+                      placeholder={t('Votre nom complet')}
                       required
                     />
                   </div>
                   <div>
                     <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.24em] text-forest">
-                      Telephone
+                      {t('Téléphone')}{' '}
                     </label>
                     <input
                       className="field"
@@ -161,7 +165,7 @@ const ServiceBookingPage: PageComponent = () => {
                       onChange={(event) =>
                         updateField('phone', (event.target as HTMLInputElement).value)
                       }
-                      placeholder="Votre numero"
+                      placeholder={t('Votre numéro')}
                       required
                     />
                   </div>
@@ -169,7 +173,7 @@ const ServiceBookingPage: PageComponent = () => {
 
                 <div>
                   <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.24em] text-forest">
-                    Email
+                    {t('Email')}{' '}
                   </label>
                   <input
                     className="field"
@@ -178,7 +182,7 @@ const ServiceBookingPage: PageComponent = () => {
                     onChange={(event) =>
                       updateField('email', (event.target as HTMLInputElement).value)
                     }
-                    placeholder="votre@email.com"
+                    placeholder={t('votre@email.com')}
                     required
                   />
                 </div>
@@ -186,7 +190,7 @@ const ServiceBookingPage: PageComponent = () => {
                 <div className="grid gap-4 md:grid-cols-2">
                   <div>
                     <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.24em] text-forest">
-                      Service choisi
+                      {t('Service choisi')}{' '}
                     </label>
                     <select
                       className="field"
@@ -197,14 +201,14 @@ const ServiceBookingPage: PageComponent = () => {
                     >
                       {services.map((service) => (
                         <option key={service.slug} value={service.slug}>
-                          {service.name}
+                          {t(service.name)}
                         </option>
                       ))}
                     </select>
                   </div>
                   <div>
                     <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.24em] text-forest">
-                      Date souhaitee
+                      {t('Date souhaitée')}{' '}
                     </label>
                     <input
                       className="field"
@@ -220,7 +224,7 @@ const ServiceBookingPage: PageComponent = () => {
 
                 <div>
                   <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.24em] text-forest">
-                    Detail du besoin
+                    {t('Détail du besoin')}{' '}
                   </label>
                   <textarea
                     className="textarea-field"
@@ -228,7 +232,9 @@ const ServiceBookingPage: PageComponent = () => {
                     onChange={(event) =>
                       updateField('needDetails', (event.target as HTMLTextAreaElement).value)
                     }
-                    placeholder="Expliquez la piece, le contexte, la quantite ou le style attendu."
+                    placeholder={t(
+                      'Expliquez la pièce, le contexte, la quantité ou le style attendu.'
+                    )}
                     required
                   />
                 </div>
@@ -236,7 +242,7 @@ const ServiceBookingPage: PageComponent = () => {
                 <div className="grid gap-4 md:grid-cols-2">
                   <div>
                     <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.24em] text-forest">
-                      Commune
+                      {t('Commune')}{' '}
                     </label>
                     <select
                       className="field"
@@ -256,7 +262,7 @@ const ServiceBookingPage: PageComponent = () => {
                   {needsPressingFields ? (
                     <div>
                       <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.24em] text-forest">
-                        Pressing le plus proche
+                        {t('Pressing le plus proche')}{' '}
                       </label>
                       <select
                         className="field"
@@ -278,12 +284,13 @@ const ServiceBookingPage: PageComponent = () => {
                 {needsPressingFields ? (
                   <div className="rounded-[1.75rem] border border-gold/20 bg-gold/8 p-5">
                     <p className="text-sm leading-7 text-forest">
-                      Choisissez notre pressing le plus proche de chez vous pour un service rapide
-                      et soigne.
+                      {t(
+                        'Choisissez notre pressing le plus proche de chez vous pour un service rapide et soigné.'
+                      )}{' '}
                     </p>
 
                     <label className="mt-5 mb-2 block text-xs font-semibold uppercase tracking-[0.24em] text-forest">
-                      Tarif pressing choisi
+                      {t('Tarif pressing choisi')}{' '}
                     </label>
                     <select
                       className="field"
@@ -292,10 +299,10 @@ const ServiceBookingPage: PageComponent = () => {
                         updateField('pressingItem', (event.target as HTMLSelectElement).value)
                       }
                     >
-                      <option value="">Choisir un article</option>
+                      <option value="">{t('Choisir un article')}</option>
                       {selectedService.tariffs?.map((item) => (
                         <option key={item.label} value={item.label}>
-                          {item.label} - {item.price}
+                          {t(item.label)} - {item.price}
                         </option>
                       ))}
                     </select>
@@ -305,19 +312,19 @@ const ServiceBookingPage: PageComponent = () => {
                 {canContinueToCheckout ? (
                   <div className="rounded-[1.75rem] border border-forest/10 bg-ivory p-5">
                     <label className="mb-3 block text-xs font-semibold uppercase tracking-[0.24em] text-forest">
-                      Option de paiement
+                      {t('Option de paiement')}{' '}
                     </label>
                     <div className="grid gap-3 md:grid-cols-2">
                       {[
                         {
                           label: 'Mobile Money',
                           value: 'mobile-money' as const,
-                          copy: 'Ideal pour confirmer rapidement le pressing choisi.',
+                          copy: 'Idéal pour confirmer rapidement le pressing choisi.',
                         },
                         {
                           label: 'Carte / virement',
                           value: 'card-virement' as const,
-                          copy: 'Pour un reglement en ligne sur la page caisse.',
+                          copy: 'Pour un règlement en ligne sur la page caisse.',
                         },
                       ].map((option) => (
                         <button
@@ -332,9 +339,9 @@ const ServiceBookingPage: PageComponent = () => {
                           ].join(' ')}
                         >
                           <p className="text-sm font-semibold uppercase tracking-[0.18em]">
-                            {option.label}
+                            {t(option.label)}
                           </p>
-                          <p className="mt-2 text-sm leading-6">{option.copy}</p>
+                          <p className="mt-2 text-sm leading-6">{t(option.copy)}</p>
                         </button>
                       ))}
                     </div>
@@ -343,54 +350,58 @@ const ServiceBookingPage: PageComponent = () => {
 
                 {feedbackMessage ? (
                   <div className="rounded-[1.5rem] border border-gold/20 bg-gold/8 px-5 py-4 text-sm leading-7 text-forest">
-                    {feedbackMessage}
+                    {t(feedbackMessage)}
                   </div>
                 ) : null}
 
                 <div className="flex flex-col gap-4 sm:flex-row">
                   <button type="submit" className="btn-primary">
-                    {canContinueToCheckout ? 'Continuer vers la caisse' : 'Envoyer ma demande'}
+                    {t(canContinueToCheckout ? 'Continuer vers la caisse' : 'Envoyer ma demande')}
                   </button>
                   <Link href="/services" className="btn-secondary">
-                    Retour aux services
+                    {t('Retour aux services')}{' '}
                   </Link>
                 </div>
               </form>
             </div>
 
             <aside className="card-surface h-fit p-8 sm:p-10">
-              <p className="eyebrow">Resume logique</p>
-              <h2 className="mt-4 font-display text-3xl text-forest">Votre parcours</h2>
+              <p className="eyebrow">{t('Résumé logique')}</p>
+              <h2 className="mt-4 font-display text-3xl text-forest">{t('Votre parcours')}</h2>
 
               <div className="mt-8 space-y-5">
                 <div className="rounded-[1.5rem] bg-ivory p-5">
                   <p className="text-xs font-semibold uppercase tracking-[0.24em] text-gold">
-                    Service
+                    {t('Service')}{' '}
                   </p>
-                  <p className="mt-3 font-display text-2xl text-forest">{selectedService.name}</p>
+                  <p className="mt-3 font-display text-2xl text-forest">
+                    {t(selectedService.name)}
+                  </p>
                   <p className="mt-3 text-sm leading-7 text-black/65">
-                    {selectedService.description}
+                    {t(selectedService.description)}
                   </p>
                 </div>
 
                 <div className="rounded-[1.5rem] border border-black/6 bg-white p-5">
                   <p className="text-xs font-semibold uppercase tracking-[0.24em] text-gold">
-                    Mode de validation
+                    {t('Mode de validation')}{' '}
                   </p>
                   <p className="mt-3 text-sm leading-7 text-black/68">
                     {canContinueToCheckout
-                      ? `Paiement possible pour ${selectedPressingTariff?.label ?? 'le pressing choisi'}.`
-                      : "Votre demande sera d'abord etudiee par l'atelier avant confirmation."}
+                      ? `${t('Paiement possible pour')} ${t(selectedPressingTariff?.label ?? 'le pressing choisi')}.`
+                      : t("Votre demande sera d'abord étudiée par l'atelier avant confirmation.")}
                   </p>
                 </div>
 
                 {selectedPressingTariff ? (
                   <div className="rounded-[1.5rem] bg-forest px-5 py-5 text-white">
-                    <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#AE8044]">
-                      Tarif selectionne
+                    <p className="text-xs font-semibold uppercase tracking-[0.24em] text-gold">
+                      {t('Tarif sélectionné')}{' '}
                     </p>
                     <div className="mt-3 flex items-center justify-between gap-4">
-                      <span className="text-sm text-white/74">{selectedPressingTariff.label}</span>
+                      <span className="text-sm text-white/74">
+                        {t(selectedPressingTariff.label)}
+                      </span>
                       <span className="font-display text-2xl">{selectedPressingTariff.price}</span>
                     </div>
                   </div>

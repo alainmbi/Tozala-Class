@@ -16,6 +16,9 @@ public/assets
 # Build tools specific
 npm-debug.log
 yarn-error.log
+*.tsbuildinfo
+trace.txt
+roottrace.txt
 
 # Editors specific
 .fleet

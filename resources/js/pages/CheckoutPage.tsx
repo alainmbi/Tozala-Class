@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { products } from '../data/products.js'
 import { formatPrice } from '../lib/format.js'
 import type { PageComponent } from '../lib/inertia.js'
+import { useLanguage } from '../lib/preferences.js'
 
 type CheckoutItem = {
   productId: number
@@ -72,6 +73,8 @@ function getServiceCheckoutFromUrl(url: string): ServiceCheckoutSummary | null {
 }
 
 const CheckoutPage: PageComponent = () => {
+  const { t } = useLanguage()
+
   const page = usePage()
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('digital')
   const [paymentModalOpen, setPaymentModalOpen] = useState(false)
@@ -126,10 +129,10 @@ const CheckoutPage: PageComponent = () => {
   const shipping = serviceCheckout ? 0 : selectedProducts.length > 0 ? 35 : 0
   const total = subtotal + shipping
   const buttonLabel = serviceCheckout
-    ? 'PAYER LE SERVICE EN SECURITE'
+    ? 'PAYER LE SERVICE EN SÉCURITÉ'
     : paymentMethod === 'delivery'
-      ? 'PASSER LA COMMANDE EN SECURITE'
-      : 'PAYER EN SECURITE'
+      ? 'PASSER LA COMMANDE EN SÉCURITÉ'
+      : 'PAYER EN SÉCURITÉ'
 
   function updateQuantity(productId: number, direction: 'increase' | 'decrease') {
     setCheckoutItems((items) =>
@@ -155,7 +158,7 @@ const CheckoutPage: PageComponent = () => {
     if (paymentMethod === 'delivery') {
       setPaymentModalOpen(false)
       setFeedbackMessage(
-        "Commande preparee. L'atelier confirmera la livraison ou la mise a disposition en boutique."
+        "Commande préparée. L'atelier confirmera la livraison ou la mise à disposition en boutique."
       )
       return
     }
@@ -171,7 +174,7 @@ const CheckoutPage: PageComponent = () => {
     setFeedbackMessage(
       serviceCheckout
         ? `Paiement ${mobileProvider.toUpperCase()} prepare pour ${serviceCheckout.serviceItem}. Une integration reelle pourra etre branchee plus tard sans changer l'interface.`
-        : `Demande ${mobileProvider.toUpperCase()} preparee. Une integration reelle pourra etre branchee plus tard sans changer l'interface.`
+        : `Demande ${mobileProvider.toUpperCase()} préparée. Une integration reelle pourra etre branchee plus tard sans changer l'interface.`
     )
     setPaymentModalOpen(false)
   }
@@ -190,36 +193,38 @@ const CheckoutPage: PageComponent = () => {
 
   return (
     <>
-      <Head title="Checkout" />
+      <Head title={t('Checkout')} />
 
       <section className="section-space pt-10">
         <div className="shell">
           <div className="grid gap-8 lg:grid-cols-[1fr_0.72fr]">
             <div className="card-surface p-8 sm:p-10">
               <p className="eyebrow">
-                {serviceCheckout ? 'Payer un service' : 'Passer a la caisse'}
+                {t(serviceCheckout ? 'Payer un service' : 'Passer à la caisse')}
               </p>
               <h1 className="mt-4 font-display text-4xl text-forest sm:text-5xl">
-                {serviceCheckout
-                  ? 'Finaliser votre reservation pressing.'
-                  : 'Finaliser votre selection.'}
+                {t(
+                  serviceCheckout
+                    ? 'Finaliser votre réservation pressing.'
+                    : 'Finaliser votre sélection.'
+                )}
               </h1>
 
               <form className="mt-10 grid gap-8">
                 <section className="grid gap-4">
                   <h2 className="text-sm font-semibold tracking-[0.22em] text-forest uppercase">
-                    01. Contact information
+                    {t('01. Informations de contact')}{' '}
                   </h2>
                   <div className="grid gap-4 md:grid-cols-2">
-                    <input className="field" type="text" placeholder="Nom complet" />
-                    <input className="field" type="email" placeholder="Adresse email" />
+                    <input className="field" type="text" placeholder={t('Nom complet')} />
+                    <input className="field" type="email" placeholder={t('Adresse email')} />
                   </div>
-                  <input className="field" type="tel" placeholder="Telephone" />
+                  <input className="field" type="tel" placeholder={t('Téléphone')} />
                 </section>
 
                 <section className="grid gap-4">
                   <h2 className="text-sm font-semibold tracking-[0.22em] text-forest uppercase">
-                    {serviceCheckout ? '02. Localisation' : '02. Adresse de livraison'}
+                    {t(serviceCheckout ? '02. Localisation' : '02. Adresse de livraison')}
                   </h2>
                   {serviceCheckout ? (
                     <div className="grid gap-4 md:grid-cols-2">
@@ -227,22 +232,22 @@ const CheckoutPage: PageComponent = () => {
                         className="field"
                         type="text"
                         defaultValue={serviceCheckout.commune}
-                        placeholder="Commune"
+                        placeholder={t('Commune')}
                       />
                       <input
                         className="field"
                         type="text"
                         defaultValue={serviceCheckout.nearestPressing}
-                        placeholder="Pressing le plus proche"
+                        placeholder={t('Pressing le plus proche')}
                       />
                     </div>
                   ) : (
                     <>
-                      <input className="field" type="text" placeholder="Adresse" />
+                      <input className="field" type="text" placeholder={t('Adresse')} />
                       <div className="grid gap-4 md:grid-cols-3">
-                        <input className="field" type="text" placeholder="Ville" />
-                        <input className="field" type="text" placeholder="Commune" />
-                        <input className="field" type="text" placeholder="Code postal" />
+                        <input className="field" type="text" placeholder={t('Ville')} />
+                        <input className="field" type="text" placeholder={t('Commune')} />
+                        <input className="field" type="text" placeholder={t('Code postal')} />
                       </div>
                     </>
                   )}
@@ -250,16 +255,19 @@ const CheckoutPage: PageComponent = () => {
 
                 <section className="grid gap-4">
                   <h2 className="text-sm font-semibold tracking-[0.22em] text-forest uppercase">
-                    03. Methode de paiement
+                    {t('03. Méthode de paiement')}{' '}
                   </h2>
                   {serviceCheckout ? (
                     <div className="rounded-[1.5rem] border border-gold/20 bg-gold/8 p-4 text-sm leading-7 text-forest">
-                      Paiement en ligne requis pour ce pressing. Le mode choisi lors de la
-                      reservation est{' '}
+                      {t(
+                        'Paiement en ligne requis pour ce pressing. Le mode choisi lors de la réservation est'
+                      )}{' '}
                       <span className="font-semibold">
-                        {serviceCheckout.paymentOption === 'card-virement'
-                          ? 'Carte / virement'
-                          : 'Mobile Money'}
+                        {t(
+                          serviceCheckout.paymentOption === 'card-virement'
+                            ? 'Carte / virement'
+                            : 'Mobile Money'
+                        )}
                       </span>
                       .
                     </div>
@@ -273,7 +281,7 @@ const CheckoutPage: PageComponent = () => {
                           onChange={() => setPaymentMethod('delivery')}
                         />
                         <span className="text-sm text-black/70">
-                          Paiement a la livraison ou en boutique
+                          {t('Paiement à la livraison ou en boutique')}{' '}
                         </span>
                       </label>
                       <label className="flex items-center gap-3 rounded-[1.5rem] border border-black/8 p-4">
@@ -284,7 +292,7 @@ const CheckoutPage: PageComponent = () => {
                           onChange={() => setPaymentMethod('digital')}
                         />
                         <span className="text-sm text-black/70">
-                          Mobile money ou virement confirme par l'atelier
+                          {t("Mobile money ou virement confirmé par l'atelier")}{' '}
                         </span>
                       </label>
                     </>
@@ -293,12 +301,12 @@ const CheckoutPage: PageComponent = () => {
 
                 {feedbackMessage ? (
                   <div className="rounded-[1.5rem] border border-gold/25 bg-gold/8 px-5 py-4 text-sm leading-7 text-forest">
-                    {feedbackMessage}
+                    {t(feedbackMessage)}
                   </div>
                 ) : null}
 
                 <button type="button" className="btn-primary" onClick={handlePrimaryAction}>
-                  {buttonLabel}
+                  {t(buttonLabel)}
                 </button>
               </form>
             </div>
@@ -306,9 +314,9 @@ const CheckoutPage: PageComponent = () => {
             <aside className="card-surface h-fit p-8 sm:p-10">
               <div className="flex items-center justify-between gap-4">
                 <div>
-                  <p className="eyebrow">Votre choix</p>
+                  <p className="eyebrow">{t('Votre choix')}</p>
                   <h2 className="mt-3 font-display text-3xl text-forest">
-                    {serviceCheckout ? 'Resume du service' : 'Resume de commande'}
+                    {t(serviceCheckout ? 'Résumé du service' : 'Résumé de commande')}
                   </h2>
                 </div>
                 <Link
@@ -319,7 +327,7 @@ const CheckoutPage: PageComponent = () => {
                   }
                   className="text-xs font-semibold tracking-[0.22em] text-gold uppercase"
                 >
-                  Modifier
+                  {t('Modifier')}{' '}
                 </Link>
               </div>
 
@@ -327,22 +335,22 @@ const CheckoutPage: PageComponent = () => {
                 {serviceCheckout ? (
                   <div className="rounded-[1.75rem] bg-ivory p-5">
                     <p className="font-display text-2xl text-forest">
-                      {serviceCheckout.serviceName}
+                      {t(serviceCheckout.serviceName)}
                     </p>
-                    <p className="mt-3 text-sm text-black/62">{serviceCheckout.serviceItem}</p>
+                    <p className="mt-3 text-sm text-black/62">{t(serviceCheckout.serviceItem)}</p>
                     <div className="mt-5 grid gap-3 text-sm text-black/68">
                       <div className="flex items-center justify-between rounded-[1.2rem] bg-white px-4 py-3">
-                        <span>Commune</span>
+                        <span>{t('Commune')}</span>
                         <span className="font-semibold text-forest">{serviceCheckout.commune}</span>
                       </div>
                       <div className="flex items-center justify-between rounded-[1.2rem] bg-white px-4 py-3">
-                        <span>Pressing</span>
+                        <span>{t('Pressing')}</span>
                         <span className="font-semibold text-forest">
                           {serviceCheckout.nearestPressing}
                         </span>
                       </div>
                       <div className="flex items-center justify-between rounded-[1.2rem] bg-white px-4 py-3">
-                        <span>Tarif</span>
+                        <span>{t('Tarif')}</span>
                         <span className="font-semibold uppercase tracking-[0.14em] text-gold">
                           {serviceCheckout.servicePriceLabel}
                         </span>
@@ -355,13 +363,13 @@ const CheckoutPage: PageComponent = () => {
                       <div className="flex gap-4">
                         <img
                           src={product.image}
-                          alt={product.name}
+                          alt={t(product.name)}
                           className="h-24 w-20 rounded-[1.25rem] object-cover"
                         />
                         <div className="flex flex-1 items-start justify-between gap-4">
                           <div>
-                            <p className="font-display text-xl text-forest">{product.name}</p>
-                            <p className="mt-2 text-sm text-black/60">{product.subtitle}</p>
+                            <p className="font-display text-xl text-forest">{t(product.name)}</p>
+                            <p className="mt-2 text-sm text-black/60">{t(product.subtitle)}</p>
                             <div className="mt-4 inline-flex items-center rounded-full border border-black/8 bg-white p-1">
                               <button
                                 type="button"
@@ -387,7 +395,7 @@ const CheckoutPage: PageComponent = () => {
                               {formatPrice(product.price)}
                             </p>
                             <p className="mt-3 text-xs font-semibold uppercase tracking-[0.22em] text-gold">
-                              Total article
+                              {t('Total article')}{' '}
                             </p>
                             <p className="mt-1 font-display text-2xl text-forest">
                               {formatPrice(lineTotal)}
@@ -402,15 +410,15 @@ const CheckoutPage: PageComponent = () => {
 
               <div className="mt-8 space-y-4 border-t border-black/6 pt-6 text-sm text-black/65">
                 <div className="flex items-center justify-between">
-                  <span>Sous-total</span>
+                  <span>{t('Sous-total')}</span>
                   <span>{formatPrice(subtotal)}</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span>Livraison</span>
+                  <span>{t('Livraison')}</span>
                   <span>{formatPrice(shipping)}</span>
                 </div>
                 <div className="flex items-center justify-between pt-2 text-base font-semibold text-forest">
-                  <span>Total</span>
+                  <span>{t('Total')}</span>
                   <span>{formatPrice(total)}</span>
                 </div>
               </div>
@@ -421,13 +429,13 @@ const CheckoutPage: PageComponent = () => {
 
       {paymentModalOpen ? (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 px-4 py-8 backdrop-blur-sm">
-          <div className="w-full max-w-3xl rounded-[2rem] bg-[#F7F4EF] p-4 sm:p-6">
+          <div className="w-full max-w-3xl rounded-[2rem] bg-ivory p-4 sm:p-6">
             <div className="rounded-[1.75rem] bg-white p-6 shadow-[var(--shadow-soft)] sm:p-8">
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <p className="eyebrow">Paiement dynamique</p>
+                  <p className="eyebrow">{t('Paiement dynamique')}</p>
                   <h2 className="mt-3 font-display text-4xl text-forest">
-                    Choisissez votre mode de paiement
+                    {t('Choisissez votre mode de paiement')}{' '}
                   </h2>
                 </div>
                 <button
@@ -435,7 +443,7 @@ const CheckoutPage: PageComponent = () => {
                   onClick={() => setPaymentModalOpen(false)}
                   className="btn-secondary !px-4 !py-2"
                 >
-                  Fermer
+                  {t('Fermer')}{' '}
                 </button>
               </div>
 
@@ -455,7 +463,7 @@ const CheckoutPage: PageComponent = () => {
                         : 'border-black/10 bg-white text-forest',
                     ].join(' ')}
                   >
-                    {option.label}
+                    {t(option.label)}
                   </button>
                 ))}
               </div>
@@ -464,7 +472,7 @@ const CheckoutPage: PageComponent = () => {
                 <form className="mt-8 grid gap-6" onSubmit={confirmMobilePayment}>
                   <div>
                     <p className="text-xs font-semibold uppercase tracking-[0.28em] text-gold">
-                      Mobile Money
+                      {t('Mobile Money')}{' '}
                     </p>
                     <div className="mt-4 grid gap-3 sm:grid-cols-2">
                       {[
@@ -481,29 +489,29 @@ const CheckoutPage: PageComponent = () => {
                             'rounded-[1.35rem] border px-4 py-4 text-left text-sm font-semibold transition',
                             mobileProvider === provider.value
                               ? 'border-gold bg-gold/10 text-forest'
-                              : 'border-black/8 bg-[#F7F4EF] text-black/70',
+                              : 'border-black/8 bg-ivory text-black/70',
                           ].join(' ')}
                         >
-                          {provider.label}
+                          {t(provider.label)}
                         </button>
                       ))}
                     </div>
                   </div>
 
                   <div className="grid gap-4 md:grid-cols-2">
-                    <input className="field" type="tel" placeholder="Numero de telephone" />
-                    <input className="field" type="text" placeholder="Nom complet" />
+                    <input className="field" type="tel" placeholder={t('Numéro de téléphone')} />
+                    <input className="field" type="text" placeholder={t('Nom complet')} />
                   </div>
 
                   <button type="submit" className="btn-primary">
-                    Confirmer le paiement mobile
+                    {t('Confirmer le paiement mobile')}{' '}
                   </button>
                 </form>
               ) : (
                 <form className="mt-8 grid gap-6" onSubmit={confirmCardPayment}>
                   <div>
                     <p className="text-xs font-semibold uppercase tracking-[0.28em] text-gold">
-                      Virement / Carte
+                      {t('Virement / Carte')}{' '}
                     </p>
                     <div className="mt-4 grid gap-3 sm:grid-cols-3">
                       {[
@@ -519,10 +527,10 @@ const CheckoutPage: PageComponent = () => {
                             'rounded-[1.35rem] border px-4 py-4 text-left text-sm font-semibold transition',
                             cardProvider === provider.value
                               ? 'border-gold bg-gold/10 text-forest'
-                              : 'border-black/8 bg-[#F7F4EF] text-black/70',
+                              : 'border-black/8 bg-ivory text-black/70',
                           ].join(' ')}
                         >
-                          {provider.label}
+                          {t(provider.label)}
                         </button>
                       ))}
                     </div>
@@ -532,17 +540,17 @@ const CheckoutPage: PageComponent = () => {
                     <input
                       className="field md:col-span-2"
                       type="text"
-                      placeholder="Numero de carte"
+                      placeholder={t('Numéro de carte')}
                     />
-                    <input className="field" type="text" placeholder="Nom sur la carte" />
+                    <input className="field" type="text" placeholder={t('Nom sur la carte')} />
                     <div className="grid grid-cols-2 gap-4">
-                      <input className="field" type="text" placeholder="MM/AA" />
-                      <input className="field" type="text" placeholder="CVV" />
+                      <input className="field" type="text" placeholder={t('MM/AA')} />
+                      <input className="field" type="text" placeholder={t('CVV')} />
                     </div>
                   </div>
 
                   <button type="submit" className="btn-primary">
-                    Confirmer le paiement par carte
+                    {t('Confirmer le paiement par carte')}{' '}
                   </button>
                 </form>
               )}

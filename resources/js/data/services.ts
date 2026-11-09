@@ -67,17 +67,17 @@ export const services: ServiceItem[] = [
     name: 'Couture homme',
     short: 'Vestiaire masculin sur mesure',
     description:
-      'Des lignes structurees, des coupes nettes et un accompagnement atelier pour vos pieces de ville, ceremonie ou business.',
-    detailTitle: 'Une couture masculine pensee pour la presence.',
+      'Des lignes structurées, des coupes nettes et un accompagnement atelier pour vos pièces de ville, cérémonie ou business.',
+    detailTitle: 'Une couture masculine pensée pour la présence.',
     detailDescription:
-      'Nous prenons le temps de comprendre votre usage, votre silhouette et le niveau de formalite souhaite afin de construire un rendu juste, durable et elegant.',
+      'Nous prenons le temps de comprendre votre usage, votre silhouette et le niveau de formalité souhaité afin de construire un rendu juste, durable et élégant.',
     options: [
       'Costume sur mesure',
-      'Chemise personnalisee',
+      'Chemise personnalisée',
       'Retouche de veste ou pantalon',
-      'Finition ceremonie',
+      'Finition cérémonie',
     ],
-    tariffTitle: 'Repere tarifaire temporaire',
+    tariffTitle: 'Repère tarifaire temporaire',
     tariffs: [
       { label: 'Consultation atelier', price: '20 $' },
       { label: 'Retouche simple', price: '35 $' },
@@ -86,25 +86,25 @@ export const services: ServiceItem[] = [
     ],
     paymentFlow: 'request',
     reservationNote:
-      "Un devis final est confirme apres prise de mesures, choix matiere et validation de l'atelier.",
+      "Un devis final est confirmé après prise de mesures, choix matière et validation de l'atelier.",
   },
   {
     id: 2,
     slug: 'couture-femme',
     name: 'Couture femme',
-    short: 'Silhouettes feminines et pieces d occasion',
+    short: "Silhouettes féminines et pièces d'occasion",
     description:
-      'Robes, tailleurs, retouches et creations sur mesure pour une allure precise, elegante et adaptee a chaque moment.',
-    detailTitle: 'Des volumes feminins ajustes a votre intention.',
+      'Robes, tailleurs, retouches et créations sur mesure pour une allure précise, élégante et adaptée à chaque moment.',
+    detailTitle: 'Des volumes féminins ajustés à votre intention.',
     detailDescription:
-      'Chaque projet est traite comme une composition complete: coupe, tombe, confort, details et harmonie des finitions.',
+      'Chaque projet est traité comme une composition complète: coupe, tombé, confort, détails et harmonie des finitions.',
     options: [
-      'Robe de ceremonie',
+      'Robe de cérémonie',
       'Tailleur sur mesure',
       'Retouche de robe',
-      'Essayage prive et ajustements',
+      'Essayage privé et ajustements',
     ],
-    tariffTitle: 'Repere tarifaire temporaire',
+    tariffTitle: 'Repère tarifaire temporaire',
     tariffs: [
       { label: 'Consultation silhouette', price: '25 $' },
       { label: 'Retouche simple', price: '30 $' },
@@ -113,7 +113,7 @@ export const services: ServiceItem[] = [
     ],
     paymentFlow: 'request',
     reservationNote:
-      'Le montant definitif depend du patron, des finitions et de la complexite du modele retenu.',
+      'Le montant définitif dépend du patron, des finitions et de la complexité du modèle retenu.',
   },
   {
     id: 3,
@@ -121,14 +121,14 @@ export const services: ServiceItem[] = [
     name: 'Pressing',
     short: 'Entretien textile premium',
     description:
-      'Nettoyage, defroissage et restitution soignee pour les pieces du quotidien comme pour les tenues de ceremonie.',
-    detailTitle: 'Un pressing rapide, soigne et parfaitement localise.',
+      'Nettoyage, défroissage et restitution soignée pour les pièces du quotidien comme pour les tenues de cérémonie.',
+    detailTitle: 'Un pressing rapide, soigné et parfaitement localisé.',
     detailDescription:
-      'Choisissez votre article, votre commune et le point pressing le plus proche pour preparer une prise en charge simple et premium.',
+      'Choisissez votre article, votre commune et le point pressing le plus proche pour préparer une prise en charge simple et premium.',
     options: [
-      'Nettoyage delicat',
+      'Nettoyage délicat',
       'Repassage vapeur',
-      'Traitement pieces ceremonie',
+      'Traitement pièces cérémonie',
       'Prise en charge selon la commune',
     ],
     tariffTitle: 'Menu tarifaire temporaire',
@@ -226,42 +226,42 @@ export const services: ServiceItem[] = [
     ],
     paymentFlow: 'online_after_selection',
     reservationNote:
-      "Une fois l'article choisi, vous pouvez poursuivre vers la caisse ou envoyer votre demande si vous preferez une confirmation manuelle.",
+      "Une fois l'article choisi, vous pouvez poursuivre vers la caisse ou envoyer votre demande si vous préférez une confirmation manuelle.",
   },
   {
     id: 4,
     slug: 'decoration-evenement',
-    name: 'Decoration evenement',
-    short: 'Scenographie et ambiance signature',
+    name: 'Décoration événement',
+    short: 'Scénographie et ambiance signature',
     description:
-      'Une direction visuelle pour vos celebrations, lancements, receptions et experiences premium.',
-    detailTitle: 'Une mise en scene elegante pour chaque moment fort.',
+      'Une direction visuelle pour vos célébrations, lancements, réceptions et expériences premium.',
+    detailTitle: 'Une mise en scène élégante pour chaque moment fort.',
     detailDescription:
-      "Nous concevons l'ambiance, les matieres, les couleurs et les points focaux pour faire vivre un evenement coherent, fluide et memorisable.",
+      "Nous concevons l'ambiance, les matières, les couleurs et les points focaux pour faire vivre un événement cohérent, fluide et mémorisable.",
     options: [
-      'Decoration de mariage',
-      'Decoration corporate',
-      'Mise en scene table et accueil',
-      'Coordination decor et style',
+      'Décoration de mariage',
+      'Décoration corporate',
+      'Mise en scène table et accueil',
+      'Coordination décor et style',
     ],
-    tariffTitle: 'Repere tarifaire temporaire',
+    tariffTitle: 'Repère tarifaire temporaire',
     tariffs: [
       { label: 'Visite et cadrage', price: '40 $' },
-      { label: 'Decoration petit format', price: '160 $' },
-      { label: 'Decoration reception', price: '350 $' },
-      { label: 'Direction complete', price: '650 $' },
+      { label: 'Décoration petit format', price: '160 $' },
+      { label: 'Décoration réception', price: '350 $' },
+      { label: 'Direction complète', price: '650 $' },
     ],
     paymentFlow: 'request',
     reservationNote:
-      'Le budget final est ajuste selon le lieu, le nombre de invites et le niveau de personnalisation.',
+      "Le budget final est ajusté selon le lieu, le nombre d'invités et le niveau de personnalisation.",
   },
   {
     id: 5,
     slug: 'conseil-image',
     name: 'Conseil en image',
-    short: 'Style, posture et coherence visuelle',
+    short: 'Style, posture et cohérence visuelle',
     description:
-      'Un accompagnement personnalise pour clarifier votre image, affiner vos choix et renforcer votre presence.',
+      'Un accompagnement personnalisé pour clarifier votre image, affiner vos choix et renforcer votre présence.',
     detailTitle: 'Un conseil image qui aligne style et impact.',
     detailDescription:
       'Nous travaillons sur la silhouette, les couleurs, les habitudes vestimentaires et les messages que votre image doit porter.',
@@ -269,9 +269,9 @@ export const services: ServiceItem[] = [
       'Audit de style',
       'Palette de couleurs',
       'Capsule dressing',
-      'Preparation image pour evenement ou prise de parole',
+      'Préparation image pour événement ou prise de parole',
     ],
-    tariffTitle: 'Repere tarifaire temporaire',
+    tariffTitle: 'Repère tarifaire temporaire',
     tariffs: [
       { label: 'Session diagnostic', price: '45 $' },
       { label: 'Audit complet', price: '90 $' },
@@ -280,7 +280,7 @@ export const services: ServiceItem[] = [
     ],
     paymentFlow: 'request',
     reservationNote:
-      "La prestation est confirmee apres echange sur vos objectifs, votre contexte et la duree d'accompagnement.",
+      "La prestation est confirmée après échange sur vos objectifs, votre contexte et la durée d'accompagnement.",
   },
 ]
 

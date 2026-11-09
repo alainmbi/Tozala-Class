@@ -3,18 +3,23 @@ import { Form } from '@adonisjs/inertia/react'
 import type { ReactNode } from 'react'
 import AuthLayout from '../../layouts/AuthLayout.js'
 import type { PageComponent } from '../../lib/inertia.js'
+import { useLanguage } from '../../lib/preferences.js'
 
 const Login: PageComponent = () => {
+  const { t } = useLanguage()
+
   return (
     <>
-      <Head title="Login" />
+      <Head title={t('Login')} />
       <div className="mx-auto w-full max-w-xl">
-        <p className="eyebrow">Connexion</p>
+        <p className="eyebrow">{t('Connexion')}</p>
         <h1 className="mt-4 font-display text-4xl text-forest sm:text-5xl">
-          Retrouvez votre vestiaire.
+          {t('Retrouvez votre vestiaire.')}{' '}
         </h1>
         <p className="mt-4 text-base leading-8 text-black/65">
-          Connectez-vous pour suivre vos commandes, vos rendez-vous atelier et vos services premium.
+          {t(
+            'Connectez-vous pour suivre vos commandes, vos rendez-vous atelier et vos services premium.'
+          )}{' '}
         </p>
 
         <Form route="session.store" className="mt-10 grid gap-5">
@@ -22,7 +27,7 @@ const Login: PageComponent = () => {
             <>
               <div>
                 <label htmlFor="email" className="mb-2 block text-sm font-medium text-forest">
-                  Email
+                  {t('Email')}{' '}
                 </label>
                 <input
                   type="email"
@@ -32,12 +37,12 @@ const Login: PageComponent = () => {
                   data-invalid={errors.email ? 'true' : undefined}
                   className="field"
                 />
-                {errors.email && <div className="mt-2 text-sm text-red-600">{errors.email}</div>}
+                {errors.email && <div className="mt-2 text-sm text-red-600">{t(errors.email)}</div>}
               </div>
 
               <div>
                 <label htmlFor="password" className="mb-2 block text-sm font-medium text-forest">
-                  Mot de passe
+                  {t('Mot de passe')}{' '}
                 </label>
                 <input
                   type="password"
@@ -48,21 +53,21 @@ const Login: PageComponent = () => {
                   className="field"
                 />
                 {errors.password && (
-                  <div className="mt-2 text-sm text-red-600">{errors.password}</div>
+                  <div className="mt-2 text-sm text-red-600">{t(errors.password)}</div>
                 )}
               </div>
 
               <button type="submit" className="btn-primary mt-4">
-                Se connecter
+                {t('Se connecter')}{' '}
               </button>
             </>
           )}
         </Form>
 
         <p className="mt-8 text-sm text-black/60">
-          Pas encore de compte ?{' '}
+          {t('Pas encore de compte ?')}{' '}
           <Link href="/signup" className="font-semibold text-gold">
-            Créer un compte
+            {t('Créer un compte')}{' '}
           </Link>
         </p>
       </div>

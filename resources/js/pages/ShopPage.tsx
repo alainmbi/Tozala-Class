@@ -5,6 +5,7 @@ import { SectionHeading } from '../components/SectionHeading.js'
 import { products, productCategorySlugMap } from '../data/products.js'
 import { shopGalleryItems, type ShopGalleryCategory } from '../data/shopGallery.js'
 import type { PageComponent } from '../lib/inertia.js'
+import { useLanguage } from '../lib/preferences.js'
 
 const galleryFilters: Array<{ label: string; value: ShopGalleryCategory }> = [
   { label: 'Voir tout', value: 'all' },
@@ -17,34 +18,34 @@ const galleryFilters: Array<{ label: string; value: ShopGalleryCategory }> = [
 
 const filterCopy: Record<ShopGalleryCategory, { title: string; description: string }> = {
   all: {
-    title: 'Toutes les pieces',
+    title: 'Toutes les pièces',
     description:
-      "Une selection melangee ou le tailoring rencontre l'evenementiel, l'atelier et les nouveaux univers de la maison.",
+      "Une sélection mélangée où le tailoring rencontre l'événementiel, l'atelier et les nouveaux univers de la maison.",
   },
   homme: {
     title: 'Collection Homme',
     description:
-      'Des silhouettes structurees, des coupes nettes et une presence couture pour les vestiaires masculins.',
+      'Des silhouettes structurées, des coupes nettes et une présence couture pour les vestiaires masculins.',
   },
   femme: {
     title: 'Collection Femme',
     description:
-      'Des drapes lumineux, une elegance ceremonielle et des pieces pensees pour marquer les entrees.',
+      'Des drapés lumineux, une élégance cérémonielle et des pièces pensées pour marquer les entrées.',
   },
   accessoires: {
     title: 'Collection Accessoires',
     description:
-      'Cuirs, bijoux, souliers et details precieux pour signer la silhouette avec justesse.',
+      'Cuirs, bijoux, souliers et détails précieux pour signer la silhouette avec justesse.',
   },
   enfant: {
     title: 'Collection Enfant',
     description:
-      'Des tenues soignement dessinees pour les plus jeunes lors des fetes, cortege et grands moments.',
+      'Des tenues soigneusement dessinées pour les plus jeunes lors des fêtes, cortège et grands moments.',
   },
   medecin: {
-    title: 'Collection Medecin',
+    title: 'Collection Médecin',
     description:
-      'Une ligne medicale premium pour conjuguer confort, hygiene visuelle et autorite professionnelle.',
+      'Une ligne médicale premium pour conjuguer confort, hygiène visuelle et autorité professionnelle.',
   },
 }
 
@@ -69,6 +70,8 @@ function getVisibleGallery(activeCategory: ShopGalleryCategory) {
 }
 
 const ShopPage: PageComponent = () => {
+  const { t } = useLanguage()
+
   const page = usePage()
   const requestedCategory = useMemo(() => parseShopCategory(page.url), [page.url])
   const [activeCategory, setActiveCategory] = useState<ShopGalleryCategory>(requestedCategory)
@@ -95,20 +98,21 @@ const ShopPage: PageComponent = () => {
 
   return (
     <>
-      <Head title="Shop" />
+      <Head title={t('Shop')} />
 
       <section className="section-space pt-10">
         <div className="shell">
           <div className="grid gap-5 rounded-[2.5rem] bg-white p-5 shadow-[var(--shadow-soft)] lg:grid-cols-[minmax(0,0.46fr)_minmax(0,0.54fr)] lg:p-8">
             <div className="flex flex-col justify-between rounded-[2rem] bg-forest px-5 py-7 text-white sm:px-7 sm:py-8">
               <div>
-                <p className="eyebrow !text-white/70">La selection</p>
+                <p className="eyebrow !text-white/70">{t('La sélection')}</p>
                 <h1 className="mt-5 font-display text-4xl leading-tight sm:text-[3.25rem]">
-                  Heritage Modernity
+                  {t('Heritage Modernity')}{' '}
                 </h1>
                 <p className="mt-5 max-w-md text-base leading-8 text-white/75">
-                  Une boutique premium ou la mode, les accessoires, les lignes enfant et les
-                  silhouettes medicales partagent la meme elegance.
+                  {t(
+                    'Une boutique premium où la mode, les accessoires, les lignes enfant et les silhouettes médicales partagent la même élégance.'
+                  )}{' '}
                 </p>
               </div>
 
@@ -124,11 +128,11 @@ const ShopPage: PageComponent = () => {
                       className={[
                         'inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-semibold uppercase tracking-[0.22em] transition duration-300',
                         isActive
-                          ? 'bg-[#AE8044] text-white shadow-[0_18px_35px_rgba(174,128,68,0.28)]'
-                          : 'border border-white/20 bg-white/8 text-white hover:-translate-y-0.5 hover:border-[#AE8044]/50',
+                          ? 'bg-gold text-white shadow-[0_18px_35px_rgba(174,128,68,0.28)]'
+                          : 'border border-white/20 bg-white/8 text-white hover:-translate-y-0.5 hover:border-gold/50',
                       ].join(' ')}
                     >
-                      {filter.label}
+                      {t(filter.label)}
                     </button>
                   )
                 })}
@@ -136,20 +140,22 @@ const ShopPage: PageComponent = () => {
 
               <div className="mt-8 grid gap-4 sm:grid-cols-2">
                 <div className="rounded-[1.5rem] border border-white/10 bg-white/8 p-4">
-                  <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#AE8044]">
-                    Produits
+                  <p className="text-xs font-semibold uppercase tracking-[0.3em] text-gold">
+                    {t('Produits')}{' '}
                   </p>
                   <p className="mt-3 font-display text-3xl">{visibleProducts.length}</p>
                   <p className="mt-2 text-xs uppercase tracking-[0.22em] text-white/60">
-                    sur {allCategoryProducts.length}
+                    {t('sur')} {allCategoryProducts.length}
                   </p>
                 </div>
                 <div className="rounded-[1.5rem] border border-white/10 bg-white/8 p-4">
-                  <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#AE8044]">
-                    Galerie
+                  <p className="text-xs font-semibold uppercase tracking-[0.3em] text-gold">
+                    {t('Galerie')}{' '}
                   </p>
                   <p className="mt-3 text-sm leading-7 text-white/72">
-                    Huit visuels choisis pour garder un parcours dense, fluide et sans vide.
+                    {t(
+                      'Huit visuels choisis pour garder un parcours dense, fluide et sans vide.'
+                    )}{' '}
                   </p>
                 </div>
               </div>
@@ -158,10 +164,10 @@ const ShopPage: PageComponent = () => {
             <div className="overflow-hidden rounded-[2rem] bg-[#101513] p-4 sm:p-5">
               <div className="mb-4 flex items-center justify-between gap-4 border-b border-white/8 pb-4 text-white/70">
                 <p className="text-xs font-semibold uppercase tracking-[0.32em]">
-                  Galerie produits
+                  {t('Galerie produits')}{' '}
                 </p>
-                <p className="text-xs font-medium uppercase tracking-[0.22em] text-[#AE8044]">
-                  {visibleGallery.length} visuels
+                <p className="text-xs font-medium uppercase tracking-[0.22em] text-gold">
+                  {visibleGallery.length} {t('visuels')}{' '}
                 </p>
               </div>
 
@@ -174,16 +180,16 @@ const ShopPage: PageComponent = () => {
                     >
                       <img
                         src={item.image}
-                        alt={item.alt}
+                        alt={t(item.alt)}
                         className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/82 via-black/25 to-transparent" />
                       <div className="absolute inset-x-0 bottom-0 p-4 sm:p-5">
-                        <p className="text-[10px] font-semibold uppercase tracking-[0.32em] text-[#AE8044]">
-                          {item.category}
+                        <p className="text-[10px] font-semibold uppercase tracking-[0.32em] text-gold">
+                          {t(item.category)}
                         </p>
                         <h3 className="mt-2 font-display text-xl leading-tight text-white">
-                          {item.title}
+                          {t(item.title)}
                         </h3>
                       </div>
                     </article>
@@ -192,8 +198,8 @@ const ShopPage: PageComponent = () => {
               </div>
 
               <div className="mt-4 flex items-center justify-between gap-3 border-t border-white/8 pt-4 text-xs uppercase tracking-[0.2em] text-white/55">
-                <span>Galerie condensee pour une lecture premium</span>
-                <span className="text-[#AE8044]">Scroll si necessaire</span>
+                <span>{t('Galerie condensée pour une lecture premium')}</span>
+                <span className="text-gold">{t('Scroll si nécessaire')}</span>
               </div>
             </div>
           </div>
@@ -206,16 +212,19 @@ const ShopPage: PageComponent = () => {
             eyebrow="Boutique"
             title={filterCopy[activeCategory].title}
             description={filterCopy[activeCategory].description}
+            align="center"
           />
 
           <div className="mt-6 flex flex-wrap items-center justify-between gap-3 rounded-[1.5rem] border border-black/6 bg-white px-5 py-4 text-sm text-black/62">
             <p>
-              {visibleProducts.length} produits affiches par defaut pour garder une navigation
-              claire et elegante.
+              {visibleProducts.length}{' '}
+              {t(
+                'produits affichés par défaut pour garder une navigation claire et élégante.'
+              )}{' '}
             </p>
             {hiddenProductsCount > 0 ? (
               <p className="font-semibold uppercase tracking-[0.18em] text-gold">
-                {hiddenProductsCount} autres pieces sur cette categorie
+                {hiddenProductsCount} {t('autres pièces sur cette catégorie')}{' '}
               </p>
             ) : null}
           </div>

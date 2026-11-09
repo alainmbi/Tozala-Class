@@ -1,3 +1,5 @@
+import { useTheme } from '../../lib/preferences.js'
+
 type BrandSilhouetteProps = {
   size?: number
   className?: string
@@ -13,6 +15,8 @@ export function BrandSilhouette({
   decorative = true,
   variant = 'dark',
 }: BrandSilhouetteProps) {
+  const isDark = useTheme() === 'dark'
+
   return (
     <img
       src="/images/logo/tozalaclass-icon-silhouette.png"
@@ -20,7 +24,7 @@ export function BrandSilhouette({
       aria-hidden={decorative ? 'true' : undefined}
       className={[
         'w-auto object-contain',
-        variant === 'light' ? 'brightness-0 invert' : '',
+        variant === 'light' || isDark ? 'brightness-0 invert' : '',
         className,
       ].join(' ')}
       style={{ height: `${size}px` }}

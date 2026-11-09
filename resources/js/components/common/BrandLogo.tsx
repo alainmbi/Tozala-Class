@@ -1,3 +1,5 @@
+import { useTheme } from '../../lib/preferences.js'
+
 type BrandLogoProps = {
   size?: 'sm' | 'md' | 'lg' | 'xl' | number
   variant?: 'light' | 'dark'
@@ -12,8 +14,9 @@ const sizeClasses: Record<Exclude<BrandLogoProps['size'], number | undefined>, s
 }
 
 export function BrandLogo({ size = 'lg', variant = 'dark', className }: BrandLogoProps) {
+  const isDark = useTheme() === 'dark'
   const src =
-    variant === 'light'
+    variant === 'light' || isDark
       ? '/images/logo/tozalaclass-logo-light.png'
       : '/images/logo/tozalaclass-logo-dark.png'
   const heightStyle = typeof size === 'number' ? { height: `${size}px` } : undefined

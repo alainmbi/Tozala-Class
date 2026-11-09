@@ -5,12 +5,19 @@ import { toast, Toaster } from 'sonner'
 import { BrandLogo } from '../components/common/BrandLogo.js'
 import { BrandSilhouette } from '../components/common/BrandSilhouette.js'
 import { ProductSearch } from '../components/search/ProductSearch.js'
+import {
+  setLanguage,
+  toggleTheme,
+  useLanguage,
+  useTheme,
+  type Language,
+} from '../lib/preferences.js'
 import type { SharedProps } from '../lib/shared.js'
 
 const navigation = [
   { label: 'Accueil', href: '/' },
   { label: 'Shop', href: '/shop' },
-  { label: 'Evenementiel', href: '/event' },
+  { label: 'Événementiel', href: '/event' },
   { label: 'Services', href: '/services' },
   { label: 'Caisse', href: '/checkout' },
 ]
@@ -21,7 +28,7 @@ const footerColumns = [
     links: [
       { label: 'Accueil', href: '/' },
       { label: 'Univers', href: '/#univers' },
-      { label: 'Pieces maitresses', href: '/#pieces' },
+      { label: 'Pièces maîtresses', href: '/#pieces' },
     ],
   },
   {
@@ -32,15 +39,15 @@ const footerColumns = [
       { label: 'Conseil image', href: '/services#conseil-image' },
       { label: 'Couture homme', href: '/services#couture-homme' },
       { label: 'Couture femme', href: '/services#couture-femme' },
-      { label: 'Decoration evenement', href: '/services#decoration-evenement' },
+      { label: 'Décoration événement', href: '/services#decoration-evenement' },
     ],
   },
   {
-    title: 'Experience',
+    title: 'Expérience',
     links: [
-      { label: 'Evenementiel', href: '/event' },
+      { label: 'Événementiel', href: '/event' },
       { label: 'Boutique', href: '/shop' },
-      { label: 'Passer a la caisse', href: '/checkout' },
+      { label: 'Passer à la caisse', href: '/checkout' },
     ],
   },
 ]
@@ -89,8 +96,72 @@ function BagIcon() {
   )
 }
 
+function SunIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      className="h-4 w-4"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.7"
+    >
+      <circle cx="12" cy="12" r="4" />
+      <path
+        d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6 7 7M17 17l1.4 1.4M18.4 5.6 17 7M7 17l-1.4 1.4"
+        strokeLinecap="round"
+      />
+    </svg>
+  )
+}
+
+function MoonIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      className="h-4 w-4"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.7"
+    >
+      <path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z" strokeLinejoin="round" />
+    </svg>
+  )
+}
+
+function PreferenceButtons() {
+  const { language, t } = useLanguage()
+  const theme = useTheme()
+  const buttonClass =
+    'flex h-10 w-10 items-center justify-center rounded-full border border-forest/10 text-xs font-semibold text-forest transition hover:border-gold/40 hover:text-gold'
+
+  return (
+    <>
+      <select
+        value={language}
+        onChange={(event) => setLanguage(event.currentTarget.value as Language)}
+        className="h-10 rounded-full border border-forest/10 bg-transparent px-2 text-xs font-semibold text-forest transition hover:border-gold/40 hover:text-gold"
+        aria-label="Langue / Language / Lokota"
+      >
+        <option value="fr">FR</option>
+        <option value="en">EN</option>
+        <option value="ln">LN</option>
+      </select>
+      <button
+        type="button"
+        onClick={toggleTheme}
+        className={buttonClass}
+        aria-label={t(theme === 'dark' ? 'Activer le mode clair' : 'Activer le mode sombre')}
+      >
+        {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
+      </button>
+    </>
+  )
+}
+
 export default function MainLayout({ children }: { children: ReactNode }) {
   const page = usePage<SharedProps>()
+  const { t } = useLanguage()
+  const theme = useTheme()
   const [mobileOpen, setMobileOpen] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
   const currentPath = page.url.split('?')[0]
@@ -116,7 +187,11 @@ export default function MainLayout({ children }: { children: ReactNode }) {
       <header className="sticky top-0 z-40 border-b border-black/6 bg-ivory/92 backdrop-blur">
         <div className="shell">
           <div className="flex min-h-[5.25rem] items-center justify-between gap-4 py-3 lg:gap-8">
-            <Link href="/" className="flex shrink-0 items-center" aria-label="Retour a l'accueil">
+            <Link
+              href="/"
+              className="flex shrink-0 items-center"
+              aria-label={t("Retour à l'accueil")}
+            >
               <BrandLogo variant="dark" size="lg" className="max-w-[11rem] sm:max-w-[13rem]" />
             </Link>
 
@@ -134,25 +209,26 @@ export default function MainLayout({ children }: { children: ReactNode }) {
                       isActive ? 'text-gold' : 'text-forest/72 hover:text-forest',
                     ].join(' ')}
                   >
-                    {item.label}
+                    {t(item.label)}
                   </Link>
                 )
               })}
             </nav>
 
             <div className="hidden items-center gap-3 lg:flex">
+              <PreferenceButtons />
               <button
                 type="button"
                 onClick={() => setSearchOpen((value) => !value)}
                 className="flex h-10 w-10 items-center justify-center rounded-full border border-forest/10 text-forest transition hover:border-gold/40 hover:text-gold"
-                aria-label="Rechercher un article"
+                aria-label={t('Rechercher un article')}
               >
                 <SearchIcon />
               </button>
               <Link
                 href="/checkout"
                 className="flex h-10 w-10 items-center justify-center rounded-full border border-forest/10 text-forest"
-                aria-label="Ouvrir la caisse"
+                aria-label={t('Ouvrir la caisse')}
               >
                 <BagIcon />
               </Link>
@@ -182,14 +258,14 @@ export default function MainLayout({ children }: { children: ReactNode }) {
                 type="button"
                 onClick={() => setSearchOpen((value) => !value)}
                 className="flex h-11 w-11 items-center justify-center rounded-full border border-forest/10 text-forest"
-                aria-label="Rechercher un article"
+                aria-label={t('Rechercher un article')}
               >
                 <SearchIcon />
               </button>
               <Link
                 href="/checkout"
                 className="flex h-11 w-11 items-center justify-center rounded-full border border-forest/10 text-forest"
-                aria-label="Ouvrir la caisse"
+                aria-label={t('Ouvrir la caisse')}
               >
                 <BagIcon />
               </Link>
@@ -197,7 +273,7 @@ export default function MainLayout({ children }: { children: ReactNode }) {
                 type="button"
                 className="flex h-11 w-11 items-center justify-center rounded-full border border-forest/10 text-forest"
                 onClick={() => setMobileOpen((value) => !value)}
-                aria-label="Ouvrir le menu"
+                aria-label={t('Ouvrir le menu')}
               >
                 <MenuIcon />
               </button>
@@ -209,13 +285,16 @@ export default function MainLayout({ children }: { children: ReactNode }) {
           {mobileOpen && (
             <div className="border-t border-black/6 py-5 lg:hidden">
               <div className="grid gap-3">
+                <div className="flex justify-center gap-3">
+                  <PreferenceButtons />
+                </div>
                 {navigation.map((item) => (
                   <Link
                     key={item.href}
                     href={item.href}
                     className="rounded-2xl border border-black/6 bg-white px-4 py-3 text-sm font-semibold tracking-[0.2em] text-forest uppercase"
                   >
-                    {item.label}
+                    {t(item.label)}
                   </Link>
                 ))}
                 {page.props.user ? (
@@ -250,24 +329,25 @@ export default function MainLayout({ children }: { children: ReactNode }) {
                 <BrandSilhouette size={40} variant="light" decorative={false} alt="TozalaClass" />
               </div>
               <p className="mt-6 max-w-md text-sm leading-7 text-white/72">
-                TozalaClass signe un art de vivre entre mode premium, entretien textile, ceremonies
-                et conseil en image.
+                {t(
+                  'TozalaClass signe un art de vivre entre mode premium, entretien textile, cérémonies et conseil en image.'
+                )}
               </p>
             </div>
 
             {footerColumns.map((column) => (
-              <div key={column.title}>
+              <div key={t(column.title)}>
                 <p className="text-sm font-semibold tracking-[0.28em] text-gold uppercase">
-                  {column.title}
+                  {t(column.title)}
                 </p>
                 <div className="mt-5 grid gap-3">
                   {column.links.map((link) => (
                     <Link
-                      key={link.label}
+                      key={t(link.label)}
                       href={link.href}
                       className="text-sm text-white/70 hover:text-white"
                     >
-                      {link.label}
+                      {t(link.label)}
                     </Link>
                   ))}
                 </div>
@@ -276,13 +356,13 @@ export default function MainLayout({ children }: { children: ReactNode }) {
           </div>
 
           <div className="mt-12 flex flex-col gap-4 border-t border-white/10 pt-6 text-sm text-white/55 sm:flex-row sm:items-center sm:justify-between">
-            <p>TozalaClass, Kinshasa. Style en temps reel.</p>
+            <p>{t('TozalaClass, Kinshasa. Style en temps réel.')}</p>
             <p>contact@tozalaclass.com</p>
           </div>
         </div>
       </footer>
 
-      <Toaster position="top-center" richColors />
+      <Toaster position="top-center" richColors theme={theme} />
     </div>
   )
 }

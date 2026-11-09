@@ -100,19 +100,7 @@
   }
 
   .brand-loader-mark {
-    animation:
-      brand-loader-spin 18s linear infinite,
-      brand-loader-pulse 3.4s ease-in-out infinite;
-  }
-}
-
-@keyframes brand-loader-spin {
-  from {
-    transform: rotate(0deg);
-  }
-
-  to {
-    transform: rotate(360deg);
+    animation: brand-loader-pulse 3.4s ease-in-out infinite;
   }
 }
 
@@ -127,4 +115,49 @@
     opacity: 1;
     transform: scale(1.035);
   }
+}
+
+html[data-theme='dark'] {
+  color-scheme: dark;
+  --color-ivory: #141c19;
+  --color-forest: #e3ebe7;
+  --color-forest-soft: #a9bab3;
+  --color-ink: #f3efe8;
+  --color-surface-dark: #1d2925;
+  --color-brand-green: #354842;
+}
+
+html[data-theme='dark'] .bg-white,
+html[data-theme='dark'] .card-surface,
+html[data-theme='dark'] .btn-secondary,
+html[data-theme='dark'] .field,
+html[data-theme='dark'] .textarea-field,
+html[data-theme='dark'] .brand-loader-card {
+  background-color: var(--color-surface-dark);
+}
+
+html[data-theme='dark'] .bg-forest,
+html[data-theme='dark'] .btn-primary {
+  background-color: var(--color-brand-green);
+}
+
+html[data-theme='dark'] .btn-primary:hover {
+  background-color: var(--color-forest-deep);
+}
+
+html[data-theme='dark'] [class*='text-black/'] {
+  color: rgb(243 239 232 / 0.72);
+}
+
+html[data-theme='dark'] [class*='border-black/'],
+html[data-theme='dark'] .card-surface,
+html[data-theme='dark'] .field,
+html[data-theme='dark'] .textarea-field,
+html[data-theme='dark'] .brand-loader-card {
+  border-color: rgb(255 255 255 / 0.1);
+}
+
+html[data-theme='dark'] .field::placeholder,
+html[data-theme='dark'] .textarea-field::placeholder {
+  color: rgb(243 239 232 / 0.45);
 }

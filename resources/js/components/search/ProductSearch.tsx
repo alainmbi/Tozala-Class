@@ -2,6 +2,7 @@ import { Link } from '@adonisjs/inertia/react'
 import { useEffect, useMemo, useState } from 'react'
 import { products } from '../../data/products.js'
 import { formatPrice } from '../../lib/format.js'
+import { useLanguage } from '../../lib/preferences.js'
 
 type ProductSearchProps = {
   open: boolean
@@ -23,6 +24,8 @@ function CloseIcon() {
 }
 
 export function ProductSearch({ open, onClose }: ProductSearchProps) {
+  const { t } = useLanguage()
+
   const [query, setQuery] = useState('')
 
   useEffect(() => {
@@ -57,7 +60,7 @@ export function ProductSearch({ open, onClose }: ProductSearchProps) {
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
             <div className="flex-1">
               <p className="text-xs font-semibold uppercase tracking-[0.3em] text-gold">
-                Recherche TozalaClass
+                {t('Recherche TozalaClass')}{' '}
               </p>
               <input
                 type="text"
@@ -65,7 +68,7 @@ export function ProductSearch({ open, onClose }: ProductSearchProps) {
                 onChange={(event) =>
                   setQuery((event as unknown as { target: { value: string } }).target.value)
                 }
-                placeholder="Rechercher un article, une categorie ou une description..."
+                placeholder={t('Rechercher un article, une catégorie ou une description...')}
                 className="field mt-3"
                 autoFocus
               />
@@ -74,7 +77,7 @@ export function ProductSearch({ open, onClose }: ProductSearchProps) {
               <span className="mr-2">
                 <CloseIcon />
               </span>
-              Fermer
+              {t('Fermer')}{' '}
             </button>
           </div>
 
@@ -89,17 +92,17 @@ export function ProductSearch({ open, onClose }: ProductSearchProps) {
                 >
                   <img
                     src={product.image}
-                    alt={product.name}
+                    alt={t(product.name)}
                     className="h-24 w-full rounded-[1.25rem] object-cover sm:w-24"
                   />
                   <div className="flex flex-1 items-start justify-between gap-4">
                     <div>
                       <p className="text-xs font-semibold uppercase tracking-[0.25em] text-gold">
-                        {product.category}
+                        {t(product.category)}
                       </p>
-                      <h3 className="mt-2 font-display text-2xl text-forest">{product.name}</h3>
+                      <h3 className="mt-2 font-display text-2xl text-forest">{t(product.name)}</h3>
                       <p className="mt-2 max-w-2xl text-sm leading-7 text-black/65">
-                        {product.description}
+                        {t(product.description)}
                       </p>
                     </div>
                     <p className="text-sm font-semibold uppercase tracking-[0.22em] text-forest">
@@ -110,7 +113,7 @@ export function ProductSearch({ open, onClose }: ProductSearchProps) {
               ))
             ) : (
               <div className="rounded-[1.5rem] border border-dashed border-black/10 bg-ivory/60 px-5 py-6 text-sm text-black/60">
-                Aucun article trouve
+                {t('Aucun article trouvé')}{' '}
               </div>
             )}
           </div>
